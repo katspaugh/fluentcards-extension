@@ -1,0 +1,64 @@
+fc-popup {
+    display: block;
+    box-shadow: 0 4px 10px #333;
+    background: #fff;
+    padding: 20px;
+    min-width: 250px;
+    max-width: 400px;
+    font-size: 12px;
+    color: #333;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+fc-div {
+    display: block;
+    margin-top: 2em;
+}
+
+fc-div:first-of-type {
+    margin-top: 0;
+}
+
+fc-span {
+    display: inline;
+}
+
+fc-ul {
+    display: block;
+    margin: 0.8em 0 0;
+}
+
+fc-li {
+    display: list-item;
+    margin-left: 2em;
+}
+
+fc-popup a.fc-logo {
+    display: block;
+    text-decoration: none !important;
+    line-height: 1 !important;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    z-index: 1;
+}
+
+fc-popup a.fc-logo svg {
+    width: 36px !important;
+    transform: none !important;
+}
+
+fc-popup .fc-gen {
+    font-style: italic;
+}
+
+fc-popup .fc-ts {
+    color: #555;
+    font-family: monospace;
+}
+
+fc-popup .fc-pos {
+    font-size: 0.8em;
+    color: #ddd;
+    padding-left: 0.5em;
+}

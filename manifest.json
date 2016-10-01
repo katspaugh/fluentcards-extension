@@ -1,0 +1,46 @@
+{
+  "name": "Fluentcards",
+  "version": "1.1",
+  "description": "Look up words in a dictionary and save as flashcards.",
+  "permissions": [
+    "<all_urls>",
+    "tabs"
+  ],
+
+  "background": {
+    "scripts": [
+      "tabs.js"
+    ]
+  },
+
+  "browser_action": {
+    "default_icon": "Fluentcards48.png",
+    "default_title": "Fluentcards"
+  },
+
+  "minimum_chrome_version": "14",
+
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "all_frames": true,
+      "js": [
+        "content_script.js"
+      ],
+      "css": [
+        "content_styles.css"
+      ]
+    }
+  ],
+
+  "icons": {
+    "16": "Fluentcards16.png",
+    "48": "Fluentcards48.png",
+    "128": "Fluentcards128.png",
+    "256": "Fluentcards256.png"
+  },
+
+  "manifest_version": 2
+}
