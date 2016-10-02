@@ -7,9 +7,9 @@
 
 const LANGS = [ 'be-be','be-ru','bg-ru','cs-en','cs-ru','da-en','da-ru','de-de','de-en','de-ru','de-tr','el-en','el-ru','en-cs','en-da','en-de','en-el','en-en','en-es','en-et','en-fi','en-fr','en-it','en-lt','en-lv','en-nl','en-no','en-pt','en-ru','en-sk','en-sv','en-tr','en-uk','es-en','es-es','es-ru','et-en','et-ru','fi-en','fi-ru','fr-en','fr-fr','fr-ru','it-en','it-it','it-ru','lt-en','lt-ru','lv-en','lv-ru','nl-en','nl-ru','no-en','no-ru','pl-ru','pt-en','pt-ru','ru-be','ru-bg','ru-cs','ru-da','ru-de','ru-el','ru-en','ru-es','ru-et','ru-fi','ru-fr','ru-it','ru-lt','ru-lv','ru-nl','ru-no','ru-pl','ru-pt','ru-ru','ru-sk','ru-sv','ru-tr','ru-tt','ru-uk','sk-en','sk-ru','sv-en','sv-ru','tr-de','tr-en','tr-ru','tt-ru','uk-en','uk-ru','uk-uk' ];
 
-let BUTTON_TEMPLATE = () => {
+const BUTTON_TEMPLATE = () => {
     return `
-<svg style="user-select: none; -webkit-user-select: none; cursor: pointer; transform: translateX(-100%); width: 24px" preserveAspectRatio viewBox="0 0 72 28" xmlns="http://www.w3.org/2000/svg">
+<svg class="fc-button" preserveAspectRatio viewBox="0 0 72 28" xmlns="http://www.w3.org/2000/svg">
   <g fill="#FBEA31">
     <rect x="0"  y="0" width="20" height="28" rx="4" ry="4" />
     <rect x="24" y="0" width="20" height="28" rx="4" ry="4" />
@@ -19,7 +19,7 @@ let BUTTON_TEMPLATE = () => {
 `;
 }
 
-let POPUP_TEMPLATE = (data) => {
+const POPUP_TEMPLATE = (data) => {
     return `
 <fc-popup>
   <a class="fc-logo" href="https://fluencards.com">${ BUTTON_TEMPLATE() }</a>
@@ -45,28 +45,51 @@ const DEF_TEMPLATE = (data) => {
 const ITEM_TEMPLATE = (data) => {
     return `
 <fc-li>
-  <fc-span class="fc-text">${ data.text }</fc-span>
+  <fc-span>${ data.text }</fc-span>
 </fc-li>
 `;
 }
 
 
+function storageSet(data) {
+    return new Promise((resolve) => chrome.storage.sync.set(data, resolve));
+}
+
+function storageGet(key) {
+    return new Promise((resolve) => chrome.storage.sync.get(key, resolve));
+}
+
 function getTargetLanguage() {
     return chrome.i18n.getUILanguage().split('-')[0];
 }
 
-function detectLanguage(sel, callback) {
-    let context = '';
-    let node = sel.focusNode;
+function getContext(sel) {
+    let selectedText = sel.toString();
+    let fullContext = sel.focusNode.parentElement.textContent;
+    let range = sel.getRangeAt(0);
+    let partialContext = range.startContainer.textContent;
+    let start = fullContext.indexOf(partialContext);
+    let end = start + partialContext.length;
+    let sentence = '';
 
-    while (context.length <= 160) {
-        context = node.textContent;
-        node = node.parentNode;
-    }
+    fullContext.replace(/\n/g, ' ').replace(/.+?[.!?]/g, (s, sentenceStart) => {
+        let sentenceEnd = sentenceStart + s.length;
+        let inSelection = (sentenceStart >= start || sentenceEnd <= end) ||
+            (start <= sentenceStart || end <= sentenceEnd);
+        if (!sentence && sentenceStart >= start && s.indexOf(selectedText) != -1) {
+            sentence = s;
+        }
+    });
 
-    chrome.i18n.detectLanguage(context, (result) => {
-        let lang = result.languages[0] ? result.languages[0].language : 'en';
-        callback(lang);
+    return sentence.trim() || fullContext;
+}
+
+function detectLanguage(context) {
+    return new Promise((resolve, reject) => {
+        chrome.i18n.detectLanguage(context, (result) => {
+            let lang = result.languages[0] ? result.languages[0].language : 'en';
+            resolve(lang);
+        });
     });
 }
 
@@ -182,8 +205,9 @@ function downloadDefinition(text, lang, callback, errback) {
 function formatData(data) {
     let defs = data.def.map((def) => {
         let items = def.tr.map((tr) => ITEM_TEMPLATE(tr));
-        def.items = items.join('');
-        return DEF_TEMPLATE(def);
+        let result = Object.create(def);
+        result.items = items.join('');
+        return DEF_TEMPLATE(result);
     }).join('');
 
     return POPUP_TEMPLATE({ defs: defs });
@@ -195,7 +219,6 @@ function speakWord(text, lang) {
     speech.lang = lang;
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(speech);
-
 }
 
 function lookupSelection() {
@@ -206,21 +229,29 @@ function lookupSelection() {
 
     let html = POPUP_TEMPLATE({ defs: 'Loading...' });
     let div = createPopup(sel, html);
+    let context = getContext(sel);
 
     let onError = () => div.remove();
-    let onSuccess = (data) => div.innerHTML = formatData(data);
 
-    let fallback = () => {
+    let onSuccess = (data) => (div.innerHTML = formatData(data), data);
+
+    let afterSuccess = (data) => {
+        let item = {};
+        let key = Date.now();
+        delete data.head;
+        data.context = context;
+        item[key] = data;
+        storageSet(item);
+        return data;
     };
 
-    detectLanguage(sel, (lang) => {
-        downloadDefinition(selectedText, lang)
-            .catch(() => downloadTranslation(selectedText, lang))
-            .then(onSuccess)
-            .catch(onError);
-
-        speakWord(selectedText, lang);
-    });
+    return detectLanguage(context)
+        .then((lang) => (speakWord(selectedText, lang), lang))
+        .then((lang) => downloadDefinition(selectedText, lang))
+        .catch(() => downloadTranslation(selectedText, lang))
+        .then(onSuccess)
+        .then(afterSuccess)
+        .catch(onError);
 }
 
 function renderButton() {
@@ -233,27 +264,62 @@ function renderButton() {
     return createPopup(sel, html, { right: true });
 }
 
-function onExtensionMessage(request) {
+function debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+	var context = this, args = arguments;
+	var later = function() {
+	    timeout = null;
+	    if (!immediate) func.apply(context, args);
+	};
+	var callNow = immediate && !timeout;
+	clearTimeout(timeout);
+	timeout = setTimeout(later, wait);
+	if (callNow) func.apply(context, args);
+    };
 }
 
-function debounce(func, wait, immediate) {
-	var timeout;
-	return function() {
-		var context = this, args = arguments;
-		var later = function() {
-			timeout = null;
-			if (!immediate) func.apply(context, args);
-		};
-		var callNow = immediate && !timeout;
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-		if (callNow) func.apply(context, args);
-	};
-};
+function exportVocab() {
+    storageGet().then((data) => {
+        let defs = Object.keys(data).sort().map((key) => data[key]);
+
+        let lines = defs.map((item) => {
+            let vocab = item.def[0];
+
+            let word = vocab.text;
+
+            if (vocab.fl) {
+                word += ', ' + vocab.fl;
+            }
+
+            if (vocab.gender) {
+                word += ', ' + vocab.gender;
+            }
+
+            let items = [ word ];
+
+            items.push(vocab.tr[0].text || '');
+
+            items.push(item.context);
+
+            return items.join('\t');
+        });
+
+        let csv = lines.join('\n');
+        let url = 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv)
+
+        window.open(url);
+    });
+}
+
+function onExtensionMessage(request) {
+    if (request.exportVocab) {
+        exportVocab();
+    }
+}
 
 function initContentScript() {
     chrome.extension.onRequest.addListener(onExtensionMessage);
-    chrome.extension.sendRequest({ init: true }, onExtensionMessage);
 
     let currButton = null;
 

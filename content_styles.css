@@ -1,3 +1,11 @@
+.fc-button {
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+    transform: translateX(-100%);
+    width: 24px;
+}
+
 fc-popup {
     display: block;
     box-shadow: 0 4px 10px #333;
@@ -25,7 +33,7 @@ fc-span {
 
 fc-ul {
     display: block;
-    margin: 0.8em 0 0;
+    margin: 0.5em 0 0;
 }
 
 fc-li {
@@ -46,6 +54,11 @@ fc-popup a.fc-logo {
 fc-popup a.fc-logo svg {
     width: 36px !important;
     transform: none !important;
+    opacity: 0.5;
+}
+
+fc-popup .fc-text {
+    font-weight: bold;
 }
 
 fc-popup .fc-gen {
