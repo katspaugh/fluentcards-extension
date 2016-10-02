@@ -279,6 +279,17 @@ function debounce(func, wait, immediate) {
     };
 }
 
+function getCloze(context, word) {
+    let cloze = context.replace(new RegExp('\\b' + word + '\\b', 'g'), '{{c1::$&}}');
+
+    // Languages like Japanese and Chinese don't have written word boundaries.
+    if (cloze == context) {
+        cloze = context.replace(new RegExp(word, 'g'), '{{c1::$&}}');
+    }
+
+    return cloze;
+}
+
 function exportVocab() {
     storageGet().then((data) => {
         let defs = Object.keys(data).sort().map((key) => data[key]);
@@ -299,8 +310,7 @@ function exportVocab() {
             let items = [ word ];
 
             items.push(vocab.tr[0].text || '');
-
-            items.push(item.context);
+            items.push(getCloze(item.context || '', vocab.text));
 
             return items.join('\t');
         });
