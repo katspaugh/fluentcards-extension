@@ -363,6 +363,19 @@ function initContentScript() {
     updateBadge();
 
     let currButton = null;
+    let timeout;
+
+    let onFocus = () => {
+        timeout && clearTimeout(timeout);
+
+        if (currButton) {
+            currButton.remove();
+            currButton = null;
+        }
+
+        lookupSelection();
+    };
+
     document.addEventListener('selectionchange', debounce((e) => {
         if (currButton) currButton.remove();
 
@@ -370,13 +383,16 @@ function initContentScript() {
 
         if (!currButton) return;
 
+        currButton.addEventListener('mouseenter', (e) => {
+            timeout = setTimeout(onFocus, 300);
+        });
+        currButton.addEventListener('mouseleave', (e) => {
+            timeout && clearTimeout(timeout);
+        });
         currButton.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            currButton.remove();
-            currButton = null;
-
-            lookupSelection();
+            onFocus();
         });
     }, 100), false);
 }
