@@ -24,6 +24,7 @@ const POPUP_TEMPLATE = (data) => {
 <fc-popup>
   <a class="fc-logo" href="https://fluencards.com">${ BUTTON_TEMPLATE() }</a>
   ${ data.defs }
+  <fc-div class="fc-powered">Powered by <a href="https://tech.yandex.com/dictionary/" target="_blank">Yandex.Dictionary</a>
 </fc-popup>
 `;
 }
@@ -84,8 +85,9 @@ function getContext(sel) {
     return sentence.trim() || fullContext;
 }
 
-function detectLanguage(context) {
+function detectLanguage(sel) {
     return new Promise((resolve, reject) => {
+        let context = sel.focusNode.parentElement.textContent;
         chrome.i18n.detectLanguage(context, (result) => {
             let lang = result.languages[0] ? result.languages[0].language : 'en';
             resolve(lang);
@@ -229,7 +231,6 @@ function lookupSelection() {
 
     let html = POPUP_TEMPLATE({ defs: 'Loading...' });
     let div = createPopup(sel, html);
-    let context = getContext(sel);
 
     let onError = () => div.remove();
 
@@ -239,16 +240,18 @@ function lookupSelection() {
         let item = {};
         let key = Date.now();
         delete data.head;
-        data.context = context;
+        data.context = getContext(sel);
         item[key] = data;
         storageSet(item);
         return data;
     };
 
-    return detectLanguage(context)
+    return detectLanguage(sel)
         .then((lang) => (speakWord(selectedText, lang), lang))
-        .then((lang) => downloadDefinition(selectedText, lang))
-        .catch(() => downloadTranslation(selectedText, lang))
+        .then((lang) => {
+            return downloadDefinition(selectedText, lang)
+                .catch(() => downloadTranslation(selectedText, lang));
+        })
         .then(onSuccess)
         .then(afterSuccess)
         .catch(onError);
@@ -315,7 +318,11 @@ function exportVocab() {
             return items.join('\t');
         });
 
-        let csv = lines.join('\n');
+        let unique = lines.filter((line, index) => {
+            return lines.indexOf(line) == index;
+        });
+
+        let csv = unique.join('\n');
         let url = 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv)
 
         window.open(url);

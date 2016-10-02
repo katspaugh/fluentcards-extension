@@ -75,3 +75,22 @@ fc-popup .fc-pos {
     color: #ddd;
     padding-left: 0.5em;
 }
+
+fc-popup .fc-powered {
+    font-size: 10px;
+    color: #999;
+    text-align: right;
+    line-height: 14px;
+}
+
+fc-popup .fc-powered a:visited,
+fc-popup .fc-powered a {
+    color: #999;
+    text-decoration: underline;
+}
+
+fc-popup .fc-powered a:active,
+fc-popup .fc-powered a:hover {
+    color: #777;
+    text-decoration: none;
+}
