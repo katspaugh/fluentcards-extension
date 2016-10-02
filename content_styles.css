@@ -23,6 +23,7 @@ fc-popup {
     font-size: 12px;
     color: #333;
     font-family: Helvetica, Arial, sans-serif;
+    position: relative;
 }
 
 fc-div {
@@ -58,10 +59,16 @@ fc-popup a.fc-logo {
     z-index: 1;
 }
 
-fc-popup a.fc-logo svg {
-    width: 36px !important;
-    transform: none !important;
+fc-popup a.fc-logo fc-button {
+    width: 36px;
+    transform: none;
+    height: auto;
     opacity: 0.5;
+}
+
+fc-popup a.fc-logo svg {
+    width: 36px;
+    margin-top: 0;
 }
 
 fc-popup .fc-text {
