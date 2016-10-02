@@ -384,15 +384,10 @@ function initContentScript() {
         if (!currButton) return;
 
         currButton.addEventListener('mouseenter', (e) => {
-            timeout = setTimeout(onFocus, 300);
+            timeout = setTimeout(onFocus, 100);
         });
         currButton.addEventListener('mouseleave', (e) => {
             timeout && clearTimeout(timeout);
-        });
-        currButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onFocus();
         });
     }, 100), false);
 }
