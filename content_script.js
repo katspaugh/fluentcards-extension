@@ -9,13 +9,15 @@ const LANGS = [ 'be-be','be-ru','bg-ru','cs-en','cs-ru','da-en','da-ru','de-de',
 
 const BUTTON_TEMPLATE = () => {
     return `
-<svg class="fc-button" preserveAspectRatio viewBox="0 0 72 28" xmlns="http://www.w3.org/2000/svg">
-  <g fill="#FBEA31">
-    <rect x="0"  y="0" width="20" height="28" rx="4" ry="4" />
-    <rect x="24" y="0" width="20" height="28" rx="4" ry="4" />
-    <rect x="48" y="0" width="20" height="28" rx="4" ry="4" />
-  </g>
-</svg>
+<fc-button>
+  <svg preserveAspectRatio viewBox="0 0 72 28" xmlns="http://www.w3.org/2000/svg">
+    <g fill="#FBEA31">
+      <rect x="0"  y="0" width="20" height="28" rx="4" ry="4" />
+      <rect x="24" y="0" width="20" height="28" rx="4" ry="4" />
+      <rect x="48" y="0" width="20" height="28" rx="4" ry="4" />
+    </g>
+  </svg>
+</fc-button>
 `;
 }
 
@@ -58,6 +60,10 @@ function storageSet(data) {
 
 function storageGet(key) {
     return new Promise((resolve) => chrome.storage.sync.get(key, resolve));
+}
+
+function storageClear() {
+    return new Promise((resolve) => chrome.storage.sync.clear(resolve));
 }
 
 function getTargetLanguage() {
@@ -223,6 +229,12 @@ function speakWord(text, lang) {
     window.speechSynthesis.speak(speech);
 }
 
+function updateBadge() {
+    getUniqueLines().then((lines) => {
+        chrome.runtime.sendMessage({ badgeCount: lines.length });
+    });
+}
+
 function lookupSelection() {
     let sel = window.getSelection();
     let selectedText = sel.toString();
@@ -243,6 +255,8 @@ function lookupSelection() {
         data.context = getContext(sel);
         item[key] = data;
         storageSet(item);
+        updateBadge();
+
         return data;
     };
 
@@ -293,9 +307,13 @@ function getCloze(context, word) {
     return cloze;
 }
 
-function exportVocab() {
-    storageGet().then((data) => {
+function getUniqueLines() {
+    return storageGet().then((data) => {
         let defs = Object.keys(data).sort().map((key) => data[key]);
+
+        if (!defs.length) {
+            return [];
+        }
 
         let lines = defs.map((item) => {
             let vocab = item.def[0];
@@ -322,24 +340,29 @@ function exportVocab() {
             return lines.indexOf(line) == index;
         });
 
-        let csv = unique.join('\n');
+        return unique;
+    });
+}
+
+function exportCards() {
+    getUniqueLines().then((lines) => {
+        let csv = lines.join('\n');
         let url = 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv)
 
         window.open(url);
     });
 }
 
-function onExtensionMessage(request) {
-    if (request.exportVocab) {
-        exportVocab();
-    }
+function onExtensionMessage(msg, sender, response) {
+    if (msg.exportCards) return exportCards();
 }
 
 function initContentScript() {
-    chrome.extension.onRequest.addListener(onExtensionMessage);
+    chrome.runtime.onMessage.addListener(onExtensionMessage);
+
+    updateBadge();
 
     let currButton = null;
-
     document.addEventListener('selectionchange', debounce((e) => {
         if (currButton) currButton.remove();
 

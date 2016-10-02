@@ -1,9 +1,16 @@
-.fc-button {
+fc-button {
+    display: block;
     user-select: none;
     -webkit-user-select: none;
     cursor: pointer;
-    transform: translateX(-100%);
+    transform: translateX(-100%) translateY(-30%);
     width: 24px;
+    height: 24px;
+}
+
+fc-button svg {
+    width: 24px;
+    margin-top: 7px;
 }
 
 fc-popup {

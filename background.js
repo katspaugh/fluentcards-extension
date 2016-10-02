@@ -1,14 +1,7 @@
-'use strict';
+chrome.runtime.onMessage.addListener((msg) => {
+    if ('badgeCount' in msg) {
+        chrome.browserAction.setBadgeText({ text: String(msg.badgeCount) });
+    }
+});
 
-function initBackground() {
-    chrome.browserAction.onClicked.addListener(
-        (tab) => {
-            chrome.tabs.sendRequest(
-                tab.id,
-                { exportVocab: true }
-            );
-        }
-    );
-}
-
-initBackground();
+chrome.browserAction.setBadgeBackgroundColor({ color: '#aaa' });

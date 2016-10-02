@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="popup.js"></script>
+
+    <style>
+      body {
+        color: #222;
+        font-size: 18px;
+        font-family: Helvetica, Arial, sans-serif;
+        padding: 5px;
+      }
+
+      body > div {
+        background: #FBEA31;
+        padding: 20px;
+      }
+
+      p {
+        white-space: nowrap;
+      }
+
+      h1 {
+        font-size: 20px;
+        color: #222;
+        text-transform: lowercase;
+      }
+
+      h1 a:hover,
+      h1 a:active,
+      h1 a:focus,
+      h1 a:visited,
+      h1 a {
+        font-size: 20px;
+        color: #222;
+        text-decoration: none;
+        outline: none;
+      }
+
+      h1 svg {
+        height: 28px;
+      }
+
+      .buttons {
+        margin-top: 20px;
+        white-space: nowrap;
+        text-align: center;
+      }
+
+      button {
+        font-size: 18px;
+        line-height: 1.2;
+        padding: 0.5em;
+        background: #222;
+        color: #fff;
+        border: none;
+      }
+
+      button[disabled] {
+        opacity: 0.5;
+      }
+
+      button:hover {
+        background: #000;
+      }
+
+      button[disabled]:hover {
+        opacity: 0.5;
+        background: #000;
+      }
+
+      button.danger {
+        background: none;
+        color: #222;
+        font-weight: bold;
+        padding: 0;
+        margin-right: 20px;
+        cursor: pointer;
+        border-bottom: 2px solid #222;
+      }
+
+      button.danger:hover {
+        text-decoration: none;
+        border-bottom: none;
+        padding-bottom: 2px;
+        color: #000;
+        border-color: #000;
+      }
+
+      button.danger:focus {
+        outline: none;
+      }
+
+      button.danger[disabled]:hover,
+      button.danger[disabled] {
+        color: #222;
+        background: none;
+        cursor: not-allowed;
+        border-bottom: 2px solid #222;
+        padding-bottom: 0;
+      }
+
+      #step2 {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div>
+      <h1>
+        <a href="https://fluentcards.com">
+          <svg preserveAspectRatio viewBox="0 0 72 28" xmlns="http://www.w3.org/2000/svg">
+            <g fill="#222">
+              <rect x="0"  y="0" width="20" height="28" rx="4" ry="4" />
+              <rect x="24" y="0" width="20" height="28" rx="4" ry="4" />
+              <rect x="48" y="0" width="20" height="28" rx="4" ry="4" />
+            </g>
+          </svg>
+          <br />
+          Fluentcards
+        </a>
+      </h1>
+
+      <div class="buttons">
+        <div id="step1">
+          <button id="btn-clear" class="danger">Clear flashcards</button>
+          <button id="btn-export">Export flashcards</button>
+        </div>
+
+        <div id="step2">
+          <button id="btn-yes">Yes, remove all</button>
+          <button id="btn-no">No, never mind</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
