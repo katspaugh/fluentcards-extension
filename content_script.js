@@ -5,8 +5,6 @@
  */
 'use strict';
 
-const LANGS = [ 'be-be','be-ru','bg-ru','cs-en','cs-ru','da-en','da-ru','de-de','de-en','de-ru','de-tr','el-en','el-ru','en-cs','en-da','en-de','en-el','en-en','en-es','en-et','en-fi','en-fr','en-it','en-lt','en-lv','en-nl','en-no','en-pt','en-ru','en-sk','en-sv','en-tr','en-uk','es-en','es-es','es-ru','et-en','et-ru','fi-en','fi-ru','fr-en','fr-fr','fr-ru','it-en','it-it','it-ru','lt-en','lt-ru','lv-en','lv-ru','nl-en','nl-ru','no-en','no-ru','pl-ru','pt-en','pt-ru','ru-be','ru-bg','ru-cs','ru-da','ru-de','ru-el','ru-en','ru-es','ru-et','ru-fi','ru-fr','ru-it','ru-lt','ru-lv','ru-nl','ru-no','ru-pl','ru-pt','ru-ru','ru-sk','ru-sv','ru-tr','ru-tt','ru-uk','sk-en','sk-ru','sv-en','sv-ru','tr-de','tr-en','tr-ru','tt-ru','uk-en','uk-ru','uk-uk' ];
-
 const BUTTON_TEMPLATE = () => {
     return `
 <fc-button>
@@ -94,8 +92,10 @@ function getContext(sel) {
 function detectLanguage(sel) {
     return new Promise((resolve, reject) => {
         let context = sel.focusNode.parentElement.textContent;
+
         chrome.i18n.detectLanguage(context, (result) => {
-            let lang = result.languages[0] ? result.languages[0].language : 'en';
+            let lang = (result && result.languages && result.languages.length) ?
+                result.languages[0].language : 'en';
             resolve(lang);
         });
     });
@@ -105,13 +105,15 @@ function createPopup(sel, html, options) {
     options = options || {};
 
     let div = document.createElement('div');
-    let bbox = sel.getRangeAt(0).getBoundingClientRect();
+    let range = sel.getRangeAt(0);
+    if (options.right) range.collapse();
+    let bbox = range.getBoundingClientRect();
     let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
     let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
 
     div.style.position = 'absolute';
     div.style.zIndex = 1000;
-    div.style.left = (options.right ? bbox.right : bbox.left + scrollLeft) + 'px';
+    div.style.left = (bbox.left + scrollLeft) + 'px';
     div.style.top = (bbox.bottom + scrollTop) + 'px';
     div.innerHTML = html;
     document.body.appendChild(div);
@@ -123,6 +125,36 @@ function createPopup(sel, html, options) {
     document.addEventListener('selectionchange', onSelectionChange, false);
 
     return div;
+}
+
+function ajax(url) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.send();
+
+    var onChange = () => xhr.abort();
+    var unsubscribe = () => document.removeEventListener('selectionchange', onChange);
+    document.addEventListener('selectionchange', onChange);
+
+    return new Promise((resolve, reject) => {
+        xhr.onload = () => {
+            unsubscribe();
+
+            let data;
+            try {
+                data = JSON.parse(xhr.responseText);
+            } catch (e) {
+                reject(e);
+                return;
+            }
+            resolve(data);
+        };
+
+        xhr.onerror = xhr.onabort = () => {
+            unsubscribe();
+            reject(xhr.statusText);
+        };
+    })
 }
 
 function downloadTranslation(text, lang) {
@@ -139,33 +171,18 @@ function downloadTranslation(text, lang) {
         'key=' + atob(apiKeys[~~(Math.random() * apiKeys.length)]),
         'lang=' + langPair,
         'text=' + encodeURIComponent(text)
-    ].join('&')
+    ].join('&');
 
-    return new Promise((resolve, reject) => {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.send();
+    return ajax(url).then((data) => {
+        if (data && data.text && data.text.length) {
+            return { def: [ { text: text, tr: [ { text: data.text[0] } ] } ] };
+        }
 
-        xhr.onload = () => {
-            let data;
-            try {
-                data = JSON.parse(xhr.responseText);
-            } catch (e) {
-                reject(e);
-            }
-
-            if (data && data.text && data.text.length) {
-                let result = { def: [ { text: text, tr: [ { text: data.text[0] } ] } ] };
-                resolve(result);
-            } else {
-                reject('No data');
-            }
-        };
-        xhr.onerror = reject;
+        throw new Error('No data');
     });
 }
 
-function downloadDefinition(text, lang, callback, errback) {
+function downloadDefinition(text, lang) {
     const apiKeys = [
         'ZGljdC4xLjEuMjAxNTA4MTdUMDgxMTAzWi43YWM4YTUzODk0OTFjYTE1LjkxNjQwNjQwNzEyM2Y2MDlmZDBiZjkzYzEyMjE5MGQ1NmFmNjM1OWM=',
         'ZGljdC4xLjEuMjAxNDA4MTBUMTgwODQyWi40YzA1ZmEyMzkyOWQ4OTFiLjA5Y2QzOTUyZDQ4Njk2YzYzOWIxNjRhNzcxZjY5NDU2N2IwNGJkZWY=',
@@ -173,11 +190,13 @@ function downloadDefinition(text, lang, callback, errback) {
     ];
     const endpoint = 'https://dictionary.yandex.net/api/v1/dicservice.json/lookup?&flags=4';
 
+    const langs = [ 'be-be','be-ru','bg-ru','cs-en','cs-ru','da-en','da-ru','de-de','de-en','de-ru','de-tr','el-en','el-ru','en-cs','en-da','en-de','en-el','en-en','en-es','en-et','en-fi','en-fr','en-it','en-lt','en-lv','en-nl','en-no','en-pt','en-ru','en-sk','en-sv','en-tr','en-uk','es-en','es-es','es-ru','et-en','et-ru','fi-en','fi-ru','fr-en','fr-fr','fr-ru','it-en','it-it','it-ru','lt-en','lt-ru','lv-en','lv-ru','nl-en','nl-ru','no-en','no-ru','pl-ru','pt-en','pt-ru','ru-be','ru-bg','ru-cs','ru-da','ru-de','ru-el','ru-en','ru-es','ru-et','ru-fi','ru-fr','ru-it','ru-lt','ru-lv','ru-nl','ru-no','ru-pl','ru-pt','ru-ru','ru-sk','ru-sv','ru-tr','ru-tt','ru-uk','sk-en','sk-ru','sv-en','sv-ru','tr-de','tr-en','tr-ru','tt-ru','uk-en','uk-ru','uk-uk' ];
+
     let targetLang = getTargetLanguage();
     let langPair = lang + '-' + targetLang;
 
-    if (LANGS.indexOf(langPair) == -1) {
-        langPair = lang + '-' + en;
+    if (langs.indexOf(langPair) == -1) {
+        langPair = lang + '-' + 'en';
     }
 
     let url = [
@@ -185,28 +204,12 @@ function downloadDefinition(text, lang, callback, errback) {
         'key=' + atob(apiKeys[~~(Math.random() * apiKeys.length)]),
         'lang=' + langPair,
         'text=' + encodeURIComponent(text)
-    ].join('&')
+    ].join('&');
 
-    return new Promise((resolve, reject) => {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.send();
+    return ajax(url).then((data) => {
+        if (data && data.def && data.def.length) return data;
 
-        xhr.onload = () => {
-            let data;
-            try {
-                data = JSON.parse(xhr.responseText);
-            } catch (e) {
-                reject(e);
-            }
-
-            if (data && data.def && data.def.length) {
-                resolve(data);
-            } else {
-                reject('No data');
-            }
-        };
-        xhr.onerror = reject;
+        throw new Error('No data');
     });
 }
 
@@ -235,48 +238,42 @@ function updateBadge() {
     });
 }
 
-function lookupSelection() {
-    let sel = window.getSelection();
-    let selectedText = sel.toString();
-
-    if (!selectedText) return;
-
-    let html = POPUP_TEMPLATE({ defs: 'Loading...' });
-    let div = createPopup(sel, html);
-
-    let onError = () => div.remove();
-
-    let onSuccess = (data) => (div.innerHTML = formatData(data), data);
-
-    let afterSuccess = (data) => {
-        let item = {};
-        let key = Date.now();
-        delete data.head;
-        data.context = getContext(sel);
-        item[key] = data;
-        storageSet(item);
-        updateBadge();
-
-        return data;
+function saveData(data, lang, selectedText, context) {
+    let item = {};
+    let key = Date.now();
+    item[key] = {
+        def: data.def,
+        selection: selectedText,
+        context: context,
+        lang: lang,
+        url: window.location.href,
+        domain: window.location.hostname
     };
+    storageSet(item);
+    updateBadge();
 
-    return detectLanguage(sel)
-        .then((lang) => (speakWord(selectedText, lang), lang))
-        .then((lang) => {
-            return downloadDefinition(selectedText, lang)
-                .catch(() => downloadTranslation(selectedText, lang));
-        })
-        .then(onSuccess)
-        .then(afterSuccess)
-        .catch(onError);
+    return data;
 }
 
-function renderButton() {
-    let sel = window.getSelection();
+function lookupSelection(sel) {
     let selectedText = sel.toString();
-
     if (!selectedText) return;
 
+    let popup = createPopup(sel, POPUP_TEMPLATE({ defs: 'Loading...' }));
+    let onSuccess = (data) => popup.innerHTML = formatData(data);
+    let onError = () => popup.remove();
+
+    return detectLanguage(sel).then((lang) => {
+        return downloadDefinition(selectedText, lang)
+            .catch(() => downloadTranslation(selectedText, lang))
+            .then((data) => saveData(data, lang, selectedText, getContext(sel)))
+            .then(onSuccess)
+            .then(() => speakWord(selectedText, lang))
+            .catch(onError)
+    });
+}
+
+function renderButton(sel) {
     let html = BUTTON_TEMPLATE();
     return createPopup(sel, html, { right: true });
 }
@@ -331,7 +328,7 @@ function getUniqueLines() {
             let items = [ word ];
 
             items.push(vocab.tr[0].text || '');
-            items.push(getCloze(item.context || '', vocab.text));
+            items.push(getCloze(item.context, item.selection));
 
             return items.join('\t');
         });
@@ -357,39 +354,36 @@ function onExtensionMessage(msg, sender, response) {
     if (msg.exportCards) return exportCards();
 }
 
+function isValidSelection (sel) {
+    let selectedText = sel.toString();
+    return selectedText && selectedText.split(' ').length <= 3;
+}
+
 function initContentScript() {
-    chrome.runtime.onMessage.addListener(onExtensionMessage);
-
-    updateBadge();
-
     let currButton = null;
     let timeout;
 
-    let onFocus = () => {
-        timeout && clearTimeout(timeout);
-
-        if (currButton) {
-            currButton.remove();
-            currButton = null;
-        }
-
-        lookupSelection();
-    };
-
     document.addEventListener('selectionchange', debounce((e) => {
+        let sel = window.getSelection();
+
         if (currButton) currButton.remove();
 
-        currButton = renderButton();
+        if (!isValidSelection(sel)) return;
+
+        currButton = renderButton(sel);
 
         if (!currButton) return;
 
         currButton.addEventListener('mouseenter', (e) => {
-            timeout = setTimeout(onFocus, 100);
+            timeout = setTimeout(() => lookupSelection(sel), 300);
         });
         currButton.addEventListener('mouseleave', (e) => {
             timeout && clearTimeout(timeout);
         });
     }, 100), false);
+
+    chrome.runtime.onMessage.addListener(onExtensionMessage);
+    updateBadge();
 }
 
 initContentScript();
