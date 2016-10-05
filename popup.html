@@ -45,7 +45,18 @@
       .buttons {
         margin-top: 20px;
         white-space: nowrap;
-        text-align: center;
+      }
+
+      .step {
+        display: flex;
+      }
+
+      .step button {
+        flex-grow: 1;
+      }
+
+      .step button:first-of-type {
+        margin-right: 1em;
       }
 
       button {
@@ -124,12 +135,22 @@
       </h1>
 
       <div class="buttons">
-        <div id="step1">
+        <div class="step" id="step1">
           <button id="btn-clear" class="danger">Clear flashcards</button>
           <button id="btn-export">Export flashcards</button>
         </div>
 
-        <div id="step2">
+        <div class="step" id="step2">
+          <button disabled class="danger">Clear flashcards</button>
+          <button disabled>Export flashcards</button>
+        </div>
+
+        <div class="step" id="step3">
+          <button id="btn-basic">Basic cards</button>
+          <button id="btn-cloze">Cloze test</button>
+        </div>
+
+        <div class="step" id="step4">
           <button id="btn-yes">Yes, remove all</button>
           <button id="btn-no">No, never mind</button>
         </div>

@@ -23,49 +23,52 @@ function storageClear() {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    let exportButton = document.getElementById('btn-export');
-    let clearButton = document.getElementById('btn-clear');
+    let stepWidth = document.getElementById('step1').clientWidth;
 
-    let toggleButtons = (toggle) => {
-        exportButton.disabled = !toggle;
-        clearButton.disabled = !toggle;
+    let switchSteps = (number) => {
+        for (let i = 1; i <= 4; i++) {
+            let step = document.getElementById('step' + i);
+
+            step.style.display = i == number ? '' : 'none';
+            step.style.width = stepWidth + 'px';
+        }
     };
 
-    let switchSteps = (toggle) => {
-        let step1 = document.getElementById('step1');
-        let step2 = document.getElementById('step2');
-        let width;
-
-        if (toggle) {
-            step2.style.width = step1.clientWidth + 'px';
-        }
-
-        step1.style.display = toggle ? 'none' : 'block';
-        step2.style.display = toggle ? 'block' : 'none';
+    let updateCount = () => {
+        storageGet().then((data) => {
+            let len = Object.keys(data).length;
+            switchSteps(len == 0 ? 2 : 1);
+            chrome.runtime.sendMessage({ badgeCount: len });
+        });
     };
 
-    storageGet().then((data) => {
-        if (Object.keys(data).length == 0) {
-            toggleButtons(false);
-        }
+    updateCount();
+
+    document.getElementById('btn-export').addEventListener('click', () => {
+        switchSteps(3);
     });
 
-    exportButton.addEventListener('click', () => {
-        sendMessage({ exportCards: true });
-    });
-
-    clearButton.addEventListener('click', () => {
-        switchSteps(true);
+    document.getElementById('btn-clear').addEventListener('click', () => {
+        switchSteps(4);
     });
 
     document.getElementById('btn-yes').addEventListener('click', () => {
         storageClear();
-        toggleButtons(false);
-        switchSteps(false);
-        chrome.runtime.sendMessage({ badgeCount: 0 });
+        switchSteps(2);
+        updateCount();
     });
 
     document.getElementById('btn-no').addEventListener('click', () => {
-        switchSteps(false);
+        switchSteps(1);
+    });
+
+    document.getElementById('btn-basic').addEventListener('click', () => {
+        sendMessage({ exportCards: 'basic' });
+        switchSteps(1);
+    });
+
+    document.getElementById('btn-cloze').addEventListener('click', () => {
+        sendMessage({ exportCards: 'cloze' });
+        switchSteps(1);
     });
 });

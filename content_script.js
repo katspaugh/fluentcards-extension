@@ -304,7 +304,7 @@ function getCloze(context, word) {
     return cloze;
 }
 
-function getUniqueLines() {
+function getUniqueLines(mode) {
     return storageGet().then((data) => {
         let defs = Object.keys(data).sort().map((key) => data[key]);
 
@@ -312,23 +312,32 @@ function getUniqueLines() {
             return [];
         }
 
+        let getWord = (def) => {
+            let word = [ def.text ];
+            if (def.fl) word.push(def.fl);
+            if (def.gender) word.push(def.fl);
+            return word.join(', ');
+        };
+
         let lines = defs.map((item) => {
-            let vocab = item.def[0];
+            let def = item.def[0];
+            let word = getWord(def);
+            let translation = def.tr[0].text || '';
+            let items;
 
-            let word = vocab.text;
-
-            if (vocab.fl) {
-                word += ', ' + vocab.fl;
+            if (mode == 'cloze') {
+                items = [
+                    getCloze(item.context, item.selection),
+                    translation,
+                    word
+                ];
+            } else {
+                items = [
+                    word,
+                    translation,
+                    item.context
+                ];
             }
-
-            if (vocab.gender) {
-                word += ', ' + vocab.gender;
-            }
-
-            let items = [ word ];
-
-            items.push(vocab.tr[0].text || '');
-            items.push(getCloze(item.context, item.selection));
 
             return items.join('\t');
         });
@@ -341,8 +350,8 @@ function getUniqueLines() {
     });
 }
 
-function exportCards() {
-    getUniqueLines().then((lines) => {
+function exportCards(mode) {
+    getUniqueLines(mode).then((lines) => {
         let csv = lines.join('\n');
         let url = 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv)
 
@@ -351,7 +360,7 @@ function exportCards() {
 }
 
 function onExtensionMessage(msg, sender, response) {
-    if (msg.exportCards) return exportCards();
+    if (msg.exportCards) return exportCards(msg.exportCards);
 }
 
 function isValidSelection (sel) {
