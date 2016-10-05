@@ -70,23 +70,16 @@ function getTargetLanguage() {
 
 function getContext(sel) {
     let selectedText = sel.toString();
-    let fullContext = sel.focusNode.parentElement.textContent;
-    let range = sel.getRangeAt(0);
-    let partialContext = range.startContainer.textContent;
-    let start = fullContext.indexOf(partialContext);
-    let end = start + partialContext.length;
-    let sentence = '';
+    let partialContext = sel.focusNode.textContent.replace(/\n/g, ' ');
+    let sentence = partialContext;
 
-    fullContext.replace(/\n/g, ' ').replace(/.+?[.!?]/g, (s, sentenceStart) => {
-        let sentenceEnd = sentenceStart + s.length;
-        let inSelection = (sentenceStart >= start || sentenceEnd <= end) ||
-            (start <= sentenceStart || end <= sentenceEnd);
-        if (!sentence && sentenceStart >= start && s.indexOf(selectedText) != -1) {
+    partialContext.replace(/.+?[.!?]/g, (s, sentenceStart) => {
+        if (s.indexOf(selectedText) != -1) {
             sentence = s;
         }
     });
 
-    return sentence.trim() || fullContext;
+    return sentence.replace(/\n+/g, ' ').trim();
 }
 
 function detectLanguage(sel) {
