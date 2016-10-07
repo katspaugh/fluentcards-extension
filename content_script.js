@@ -70,7 +70,7 @@ function getTargetLanguage() {
 
 function getContext(sel) {
     let selectedText = sel.toString();
-    let partialContext = sel.focusNode.textContent.replace(/\n/g, ' ');
+    let partialContext = sel.focusNode.textContent.replace(/\s+/g, ' ');
     let sentence = partialContext;
 
     partialContext.replace(/.+?[.!?]/g, (s, sentenceStart) => {
@@ -267,8 +267,7 @@ function lookupSelection(sel) {
 }
 
 function renderButton(sel) {
-    let html = BUTTON_TEMPLATE();
-    return createPopup(sel, html, { right: true });
+    return createPopup(sel, BUTTON_TEMPLATE(), { right: true });
 }
 
 function debounce(func, wait, immediate) {
