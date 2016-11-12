@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let stepWidth = document.getElementById('step1').clientWidth;
 
     let switchSteps = (number) => {
-        for (let i = 1; i <= 4; i++) {
+        for (let i = 1; i <= 5; i++) {
             let step = document.getElementById('step' + i);
 
             step.style.display = i == number ? '' : 'none';
@@ -54,8 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('btn-yes').addEventListener('click', () => {
         storageClear();
-        switchSteps(2);
-        updateCount();
+        switchSteps(5);
+
+        setTimeout(updateCount, 1000);
     });
 
     document.getElementById('btn-no').addEventListener('click', () => {

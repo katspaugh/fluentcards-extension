@@ -52,6 +52,20 @@ const ITEM_TEMPLATE = (data) => {
 }
 
 
+const Behaviours = {
+    doubleClick: 'double-click',
+    buttonClick: 'button-click'
+};
+
+const defaultOptions = {
+    targetLanguage: chrome.i18n.getUILanguage().split('-')[0],
+    behavior: Behaviours.buttonClick,
+    ttsEnabled: true
+};
+
+let userOptions = Object.assign({}, defaultOptions);
+
+
 function storageSet(data) {
     return new Promise((resolve) => chrome.storage.sync.set(data, resolve));
 }
@@ -61,11 +75,11 @@ function storageGet(key) {
 }
 
 function storageClear() {
-    return new Promise((resolve) => chrome.storage.sync.clear(resolve));
-}
-
-function getTargetLanguage() {
-    return chrome.i18n.getUILanguage().split('-')[0];
+    return new Promise((resolve) => {
+        chrome.storage.sync.clear(() => {
+            storageSet({ userOptions: userOptions }).then(resolve);
+        });
+    });
 }
 
 function getContext(sel) {
@@ -156,7 +170,7 @@ function downloadTranslation(text, lang) {
     ];
     const endpoint = 'https://translate.yandex.net/api/v1.5/tr.json/translate?format=html';
 
-    let targetLang = getTargetLanguage();
+    let targetLang = userOptions.targetLanguage;
     let langPair = lang + '-' + targetLang;
 
     let url = [
@@ -168,6 +182,9 @@ function downloadTranslation(text, lang) {
 
     return ajax(url).then((data) => {
         if (data && data.text && data.text.length) {
+            if (data.text[0] == text) {
+                throw new Error('No translation');
+            }
             return { def: [ { text: text, tr: [ { text: data.text[0] } ] } ] };
         }
 
@@ -185,7 +202,7 @@ function downloadDefinition(text, lang) {
 
     const langs = [ 'be-be','be-ru','bg-ru','cs-en','cs-ru','da-en','da-ru','de-de','de-en','de-ru','de-tr','el-en','el-ru','en-cs','en-da','en-de','en-el','en-en','en-es','en-et','en-fi','en-fr','en-it','en-lt','en-lv','en-nl','en-no','en-pt','en-ru','en-sk','en-sv','en-tr','en-uk','es-en','es-es','es-ru','et-en','et-ru','fi-en','fi-ru','fr-en','fr-fr','fr-ru','it-en','it-it','it-ru','lt-en','lt-ru','lv-en','lv-ru','nl-en','nl-ru','no-en','no-ru','pl-ru','pt-en','pt-ru','ru-be','ru-bg','ru-cs','ru-da','ru-de','ru-el','ru-en','ru-es','ru-et','ru-fi','ru-fr','ru-it','ru-lt','ru-lv','ru-nl','ru-no','ru-pl','ru-pt','ru-ru','ru-sk','ru-sv','ru-tr','ru-tt','ru-uk','sk-en','sk-ru','sv-en','sv-ru','tr-de','tr-en','tr-ru','tt-ru','uk-en','uk-ru','uk-uk' ];
 
-    let targetLang = getTargetLanguage();
+    let targetLang = userOptions.targetLanguage;
     let langPair = lang + '-' + targetLang;
 
     if (langs.indexOf(langPair) == -1) {
@@ -248,21 +265,35 @@ function saveData(data, lang, selectedText, context) {
     return data;
 }
 
-function lookupSelection(sel) {
+function lookupSelection(sel, state) {
     let selectedText = sel.toString();
     if (!selectedText) return;
 
-    let popup = createPopup(sel, POPUP_TEMPLATE({ defs: 'Loading...' }));
-    let onSuccess = (data) => popup.innerHTML = formatData(data);
-    let onError = () => popup.remove();
+    let popup, onSuccess, onError;
+
+    if (userOptions.behavior == Behaviours.doubleClick) {
+        onSuccess = (data) => createPopup(sel, formatData(data));
+        onError = () => null;
+    } else {
+        popup = createPopup(sel, POPUP_TEMPLATE({ defs: 'Loading...' }));
+        onSuccess = (data) => popup.innerHTML = formatData(data);
+        onError = () => popup.remove();
+    }
 
     return detectLanguage(sel).then((lang) => {
         return downloadDefinition(selectedText, lang)
-            .catch(() => downloadTranslation(selectedText, lang))
-            .then((data) => saveData(data, lang, selectedText, getContext(sel)))
-            .then(onSuccess)
-            .then(() => speakWord(selectedText, lang))
-            .catch(onError)
+            .catch(() => state.ok && downloadTranslation(selectedText, lang))
+            .then((data) => {
+                if (!state.ok) throw new Error();
+
+                saveData(data, lang, selectedText, getContext(sel));
+                onSuccess(data);
+
+                if (userOptions.ttsEnabled) {
+                    speakWord(selectedText, lang);
+                }
+            })
+            .catch(onError);
     });
 }
 
@@ -298,7 +329,9 @@ function getCloze(context, word) {
 
 function getUniqueLines(mode) {
     return storageGet().then((data) => {
-        let defs = Object.keys(data).sort().map((key) => data[key]);
+        let defs = Object.keys(data).filter((key) => {
+            return !isNaN(Number(key));
+        }).sort().map((key) => data[key]);
 
         if (!defs.length) {
             return [];
@@ -351,40 +384,75 @@ function exportCards(mode) {
     });
 }
 
-function onExtensionMessage(msg, sender, response) {
-    if (msg.exportCards) return exportCards(msg.exportCards);
-}
-
 function isValidSelection (sel) {
     let selectedText = sel.toString();
     return selectedText && selectedText.split(' ').length <= 3;
 }
 
-function initContentScript() {
+function initOptions() {
+    // Get user options
+    return storageGet('userOptions').then((data) => {
+        if (!data || !data.userOptions) return;
+        Object.assign(userOptions, JSON.parse(data.userOptions));
+        return userOptions;
+    });
+}
+
+function initEvents() {
+    let selection = null;
     let currButton = null;
-    let timeout;
+    let state = { ok: true };
+
+    let removeButton = () => {
+        if (!currButton) return;
+        currButton.remove();
+        currButton = null;
+    };
+
+    let lookUp = () => {
+        state.ok = true;
+        return lookupSelection(selection, state).then(removeButton);
+    };
+
+    // Look up the selection on double click
+    if (userOptions.behavior == Behaviours.doubleClick) {
+        document.addEventListener('dblclick', debounce((e) => {
+            if (selection) lookUp();
+        }, 100));
+    }
 
     document.addEventListener('selectionchange', debounce((e) => {
+        selection = null;
+        state.ok = false;
+        removeButton();
+
+        // Find the qualifying selection
         let sel = window.getSelection();
-
-        if (currButton) currButton.remove();
-
         if (!isValidSelection(sel)) return;
+        selection = sel;
 
-        currButton = renderButton(sel);
-
+        // Create a button
+        currButton = renderButton(selection);
         if (!currButton) return;
 
-        currButton.addEventListener('mouseenter', (e) => {
-            timeout = setTimeout(() => lookupSelection(sel), 300);
-        });
-        currButton.addEventListener('mouseleave', (e) => {
-            timeout && clearTimeout(timeout);
+        // Look up the selection on click
+        currButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            lookUp();
         });
     }, 100), false);
+}
 
-    chrome.runtime.onMessage.addListener(onExtensionMessage);
+function init() {
+    initOptions().then(initEvents);
+
+    chrome.runtime.onMessage.addListener((msg) => {
+        if (msg.exportCards) exportCards(msg.exportCards);
+    });
+
     updateBadge();
 }
 
-initContentScript();
+
+// Start up
+init();

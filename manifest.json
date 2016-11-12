@@ -1,11 +1,18 @@
 {
-  "name": "Fluentcards",
-  "version": "0.0.6",
+  "name": "Fluentcards Dictionary",
+  "version": "0.0.7",
   "description": "Look up words in a dictionary and save as flashcards.",
   "permissions": [
     "<all_urls>",
     "storage"
   ],
+
+  "options_ui": {
+    // Required.
+    "page": "options.html",
+    // Recommended.
+    "chrome_style": true
+  },
 
   "background": {
     "scripts": [

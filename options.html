@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fluentcards Options</title>
+    <style>
+      body: { padding: 10px; }
+    </style>
+  </head>
+
+  <body>
+    <form action="#" id="options-form">
+      <p>
+        <label>
+          Your native language:
+
+          <select name="targetLanguage">
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="es">Español</option>
+            <option value="pt">Português</option>
+            <option value="it">Italiano</option>
+            <option value="ru">Русский</option>
+          </select>
+        </label>
+      </p>
+
+      <p>
+        <label>
+          How to open the dictionary popup:
+
+          <select name="behavior">
+            <option value="double-click"><b>Double-click</b> on a word</option>
+            <option value="button-click"><b>Click</b> on button under the word</option>
+          </select>
+        </label>
+      </p>
+
+      <p>
+        <label>
+          <input type="checkbox" name="tts">
+          Pronounce the word immediately on lookup
+        </label>
+      </p>
+
+      <p id="status"></p>
+
+      <p>
+        <button type="submit">Save</button>
+      </p>
+    </form>
+
+    <script src="options.js"></script>
+  </body>
+</html>
