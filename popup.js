@@ -72,4 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
         sendMessage({ exportCards: 'cloze' });
         switchSteps(1);
     });
+
+    document.getElementById('options-button').addEventListener('click', (e) => {
+        e.preventDefault();
+        chrome.runtime.openOptionsPage();
+    });
 });

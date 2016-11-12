@@ -8,9 +8,7 @@
   ],
 
   "options_ui": {
-    // Required.
     "page": "options.html",
-    // Recommended.
     "chrome_style": true
   },
 
