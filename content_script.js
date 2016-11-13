@@ -5,9 +5,9 @@
  */
 'use strict';
 
-const BUTTON_TEMPLATE = () => {
+const BUTTON_TEMPLATE = (isAnimated) => {
     return `
-<fc-button>
+<fc-button title="Click to view definition" class="fc-button-${ isAnimated ? 'animated' : '' }">
   <svg preserveAspectRatio viewBox="0 0 72 28" xmlns="http://www.w3.org/2000/svg">
     <g fill="#FBEA31">
       <rect x="0"  y="0" width="20" height="28" rx="4" ry="4" />
@@ -297,8 +297,8 @@ function lookupSelection(sel, state) {
     });
 }
 
-function renderButton(sel) {
-    return createPopup(sel, BUTTON_TEMPLATE(), { right: true });
+function renderButton(sel, isAnimated) {
+    return createPopup(sel, BUTTON_TEMPLATE(isAnimated), { right: true });
 }
 
 function debounce(func, wait, immediate) {
@@ -401,6 +401,7 @@ function initOptions() {
 function initEvents() {
     let selection = null;
     let currButton = null;
+    let isDoubleClick = false;
     let state = { ok: true };
 
     let removeButton = () => {
@@ -414,14 +415,13 @@ function initEvents() {
         return lookupSelection(selection, state).then(removeButton);
     };
 
-    // Look up the selection on double click
-    if (userOptions.behavior == Behaviours.doubleClick) {
-        document.addEventListener('dblclick', debounce((e) => {
-            if (selection) lookUp();
-        }, 100));
-    }
+    document.addEventListener('dblclick', () => {
+        isDoubleClick = true;
+    });
 
     document.addEventListener('selectionchange', debounce((e) => {
+        let doubleClickEnabled = isDoubleClick && userOptions.behavior == Behaviours.doubleClick;
+        isDoubleClick = false;
         selection = null;
         state.ok = false;
         removeButton();
@@ -432,8 +432,11 @@ function initEvents() {
         selection = sel;
 
         // Create a button
-        currButton = renderButton(selection);
+        currButton = renderButton(selection, doubleClickEnabled);
         if (!currButton) return;
+
+        // Look up on double click if enabled
+        if (doubleClickEnabled) lookUp();
 
         // Look up the selection on click
         currButton.addEventListener('click', (e) => {

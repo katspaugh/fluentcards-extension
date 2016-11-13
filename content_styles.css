@@ -13,6 +13,21 @@ fc-button svg {
     margin-top: 7px;
 }
 
+fc-button.fc-button-animated rect:nth-of-type(1) {
+    animation: fade 400ms 0ms infinite alternate;
+}
+
+fc-button.fc-button-animated rect:nth-of-type(2) {
+    animation: fade 400ms 200ms infinite alternate;
+}
+
+fc-button.fc-button-animated rect:nth-of-type(3) {
+    animation: fade 400ms 400ms infinite alternate;
+}
+
+@-webkit-keyframes fade { from { opacity: 1; } to { opacity: 0; }  }
+@keyframes fade { from { opacity: 1; } to { opacity: 0; }  }
+
 fc-popup {
     display: block;
     box-shadow: 0 4px 10px #333;
