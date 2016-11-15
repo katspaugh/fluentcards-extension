@@ -1,0 +1,30 @@
+{
+  "name": "chrome-fluentcards",
+  "version": "1.0.0",
+  "description": "<img width=\"409\" src=\"https://cloud.githubusercontent.com/assets/381895/19022596/faeb3a24-88db-11e6-9628-beefbaec07e2.png\">",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack-dev-server --progress --colors",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/katspaugh/fluentcards-extension.git"
+  },
+  "author": "katspaugh@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/katspaugh/fluentcards-extension/issues"
+  },
+  "homepage": "https://github.com/katspaugh/fluentcards-extension#readme",
+  "devDependencies": {
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.7",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "webpack": "^1.13.3",
+    "webpack-dev-server": "^1.16.2"
+  }
+}
