@@ -4,7 +4,8 @@
   "description": "<img width=\"409\" src=\"https://cloud.githubusercontent.com/assets/381895/19022596/faeb3a24-88db-11e6-9628-beefbaec07e2.png\">",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --progress --colors",
+    "start": "webpack-dev-server --progress --colors",
+    "prod": "webpack -p",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
