@@ -12,7 +12,7 @@ export default class FcCard extends React.Component {
 
     return (
       <fc-card>
-        <a className="fc-logo" href="https://fluencards.com">
+        <a className="fc-logo" href="https://fluentcards.com">
           <FcButton />
         </a>
 
