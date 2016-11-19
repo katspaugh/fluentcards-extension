@@ -4,7 +4,7 @@ export default class FcDef extends React.Component {
   render() {
     let data = this.props.data;
     let trs = data.tr || [];
-    let items = trs.map((item, i) => <fc-li key={'item' + i}><fc-span>{ item.text }</fc-span></fc-li>);
+    let items = trs.slice(0, 3).map((item, i) => <fc-li key={'item' + i}><fc-span>{ item.text }</fc-span></fc-li>);
 
     return (
       <fc-def>

@@ -1,6 +1,6 @@
 {
   "name": "Fluentcards Dictionary",
-  "version": "0.0.9",
+  "version": "0.1.1",
   "description": "Look up words in a dictionary and save as flashcards.",
   "permissions": [
     "<all_urls>",

@@ -19,7 +19,10 @@ export default class FcCard extends React.Component {
         {items}
 
         <fc-div class="fc-powered">
-          Powered by <a href="https://tech.yandex.com/dictionary/" target="_blank">Yandex.Dictionary</a>
+          Powered by
+          <a href="https://tech.yandex.com/dictionary/" target="_blank">
+            <fc-span>Yandex.Dictionary</fc-span>
+          </a>
         </fc-div>
       </fc-card>
     );

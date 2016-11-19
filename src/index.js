@@ -14,7 +14,10 @@ function exportCards(mode) {
 
 function isValidSelection (sel) {
   let selectedText = sel.toString();
-  return selectedText && selectedText.split(' ').length <= 3;
+  if (!selectedText) return false;
+  if (/^[0-9,.:;/?!@#$%&*()=_+<>|"'}{\[\]«»‘’“”~`±§ -]+$/.test(selectedText)) return false;
+  let wordsLen = selectedText.trim().split(' ').length;
+  return wordsLen >= 1 && wordsLen <= 3;
 }
 
 function initEvents() {

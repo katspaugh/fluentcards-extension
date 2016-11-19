@@ -83,6 +83,9 @@ fc-card a.fc-logo {
     display: block;
     text-decoration: none !important;
     line-height: 1 !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
     position: absolute;
     right: 20px;
     top: 20px;
@@ -128,15 +131,18 @@ fc-card .fc-powered {
     line-height: 14px;
 }
 
-fc-card .fc-powered a:visited,
-fc-card .fc-powered a:link,
 fc-card .fc-powered a {
+    visibility: hidden !important;
+}
+
+fc-card .fc-powered fc-span {
+    visibility: visible !important;
     color: #999;
     text-decoration: underline;
 }
 
-fc-card .fc-powered a:active,
-fc-card .fc-powered a:hover {
+fc-card .fc-powered fc-span:hover {
+    visibility: visible !important;
     color: #777;
     text-decoration: none;
 }
