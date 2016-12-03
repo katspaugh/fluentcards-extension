@@ -16,9 +16,9 @@ const langs = [ 'be-be','be-ru','bg-ru','cs-en','cs-ru','da-en','da-ru','de-de',
  * @param {string} text
  * @param {string} lang
  * @param {string} targetLang
- * @return {promise}
+ * @returns {promise}
  */
-export default function downloadDefinition(text, lang, targetLang) {
+export default function yandexDefine(text, lang, targetLang) {
   let langPair = lang + '-' + targetLang;
 
   if (langs.indexOf(langPair) == -1) {
@@ -32,7 +32,8 @@ export default function downloadDefinition(text, lang, targetLang) {
     'text=' + encodeURIComponent(text)
   ].join('&');
 
-  return ajax(url).then((data) => {
+  return ajax(url, { json: true }).then((data) => {
+    data.source = 'yandex';
     if (data && data.def && data.def.length) return data;
 
     throw new Error('No data');

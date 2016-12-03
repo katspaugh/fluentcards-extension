@@ -2,22 +2,34 @@
  * Make an XMLHttprequest
  *
  * @param {string} url
- * @return {promise}
+ * @param {object} options
+ * @returns {promise}
  */
-export default function ajax(url) {
+export default function ajax(url, options) {
   let xhr = new XMLHttpRequest();
-  xhr.open('GET', url, true);
+  xhr.open(options.method || 'GET', url, true);
+  if (options.xml) xhr.overrideMimeType('text/xml');
   xhr.send();
 
   return new Promise((resolve, reject) => {
     xhr.onload = () => {
+      if (!(xhr.readyState == xhr.DONE && xhr.status == 200)) return;
+
       let data;
-      try {
-        data = JSON.parse(xhr.responseText);
-      } catch (e) {
-        reject(e);
-        return;
+
+      if (options.json) {
+        try {
+          data = JSON.parse(xhr.responseText);
+        } catch (e) {
+          reject(e);
+          return;
+        }
+      } else if (options.xml) {
+        data = xhr.responseXML;
+      } else {
+        data = xhr.responseText;
       }
+
       resolve(data);
     };
 
