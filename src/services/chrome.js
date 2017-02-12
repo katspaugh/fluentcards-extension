@@ -1,4 +1,4 @@
-export default window.chrome.storage ? window.chrome : {
+const mockChrome = {
   storage: {
     sync: {
       get: (key, callback) => callback && callback({}),
@@ -19,3 +19,9 @@ export default window.chrome.storage ? window.chrome : {
     }
   }
 };
+
+
+
+const hasChrome = (typeof window !== 'undefined' && window.chrome && window.chrome.storage);
+
+export default (hasChrome ? window.chrome : mockChrome);

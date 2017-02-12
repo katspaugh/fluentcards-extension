@@ -1,4 +1,4 @@
-fc-button {
+.fc-button {
     display: block;
     user-select: none;
     -webkit-user-select: none;
@@ -12,31 +12,31 @@ fc-button {
     opacity: 0;
 }
 
-fc-button.fc-button-visible {
+.fc-button.fc-button-visible {
     opacity: 1;
 }
 
-fc-button svg {
+.fc-button svg {
     width: 24px;
     margin-top: 7px;
 }
 
-fc-button.fc-button-animated rect:nth-of-type(1) {
+.fc-button.fc-button-animated rect:nth-of-type(1) {
     animation: fade 400ms 0ms infinite alternate;
 }
 
-fc-button.fc-button-animated rect:nth-of-type(2) {
+.fc-button.fc-button-animated rect:nth-of-type(2) {
     animation: fade 400ms 200ms infinite alternate;
 }
 
-fc-button.fc-button-animated rect:nth-of-type(3) {
+.fc-button.fc-button-animated rect:nth-of-type(3) {
     animation: fade 400ms 400ms infinite alternate;
 }
 
 @-webkit-keyframes fade { from { opacity: 1; } to { opacity: 0; }  }
 @keyframes fade { from { opacity: 1; } to { opacity: 0; }  }
 
-fc-card {
+.fc-card {
     display: block;
     box-shadow: 0 4px 10px #333;
     background: #fff;
@@ -51,55 +51,42 @@ fc-card {
     left: 0;
 }
 
-fc-div {
-    display: block;
-}
-
-fc-div:first-of-type {
-    margin-top: 0;
-}
-
-fc-span {
-    display: inline;
-}
-
-fc-ul {
+.fc-ul {
     display: block;
     margin: 1em 0 0;
 }
 
-fc-li {
+.fc-li {
     display: list-item;
     margin-left: 2em;
     margin-bottom: 0.1em;
 }
 
-fc-def {
-    display: block;
+.fc-def {
     margin-bottom: 2em;
 }
 
-fc-card .fc-text {
+.fc-card .fc-text {
     font-weight: bold;
 }
 
-fc-card .fc-gen {
+.fc-card .fc-gen {
     font-style: italic;
 }
 
-fc-card .fc-ts {
+.fc-card .fc-ts {
     color: #555;
     font-family: monospace;
     padding-top: 0.5em;
 }
 
-fc-card .fc-pos {
+.fc-card .fc-pos {
     font-size: 0.8em;
     color: #ddd;
     padding-left: 0.5em;
 }
 
-fc-card .fc-yandex {
+.fc-card .fc-yandex {
     text-align: right;
     font-size: 10px;
     color: #999;
@@ -107,23 +94,23 @@ fc-card .fc-yandex {
     line-height: 14px;
 }
 
-fc-card .fc-yandex a {
+.fc-card .fc-yandex a {
     visibility: hidden !important;
 }
 
-fc-card .fc-yandex fc-span {
+.fc-card .fc-yandex fc-span {
     visibility: visible !important;
     color: #999;
     text-decoration: underline;
 }
 
-fc-card .fc-yandex fc-span:hover {
+.fc-card .fc-yandex fc-span:hover {
     visibility: visible !important;
     color: #777;
     text-decoration: none;
 }
 
-fc-card .fc-mw {
+.fc-card .fc-mw {
     width: 35px;
     height: 35px;
     margin-bottom: 10px;
@@ -131,12 +118,12 @@ fc-card .fc-mw {
     background-size: cover;
 }
 
-fc-card .fc-brand {
+.fc-card .fc-brand {
     float: right;
     position: relative;
 }
 
-fc-card a.fc-logo {
+.fc-card a.fc-logo {
     display: block;
     text-decoration: none !important;
     line-height: 1 !important;
@@ -145,14 +132,14 @@ fc-card a.fc-logo {
     margin: 0 !important;
 }
 
-fc-card a.fc-logo fc-button {
+.fc-card a.fc-logo fc-button {
     width: 36px;
     transform: none;
     height: auto;
     opacity: 1;
 }
 
-fc-card a.fc-logo svg {
+.fc-card a.fc-logo svg {
     width: 36px;
     margin-top: 0;
 }

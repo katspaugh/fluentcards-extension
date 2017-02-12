@@ -1,4 +1,4 @@
-import ajax from './ajax.js';
+import ajax from '../utils/ajax.js';
 
 const apiKeys = [
   'dHJuc2wuMS4xLjIwMTYwNzA5VDExNDkyOFouZDI4OWYyZjA0NDdkNDk3Mi5hOWYzMjVkOWM0ZWMxNWE1NDRmZDVhNzI1MTdjZDdjYTY0M2FhMDNk'
@@ -32,6 +32,6 @@ export default function yandexTranslate(text, lang, targetLang) {
       throw new Error('No translation');
     }
 
-    return { source: 'yandex', def: [ { text: text, tr: [ { text: translated } ] } ] };
+    return { def: [ { text: text, tr: [ { text: translated } ] } ] };
   });
 };

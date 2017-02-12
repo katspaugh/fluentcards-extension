@@ -1,12 +1,7 @@
 'use strict';
 
-function sendMessage(msg, callback) {
-  chrome.tabs.query({
-    active: true,
-    currentWindow: true
-  }, (tabs) => {
-    chrome.tabs.sendMessage(tabs[0].id, msg, callback);
-  });
+function sendMessage(msg) {
+  chrome.runtime.sendMessage(msg);
 }
 
 function storageGet() {
@@ -46,40 +41,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let updateCount = () => {
     storageGet().then((data) => {
-      let len = Object.keys(data).length;
+      let len = data.length;
       switchSteps(len == 0 ? 2 : 1);
-      chrome.runtime.sendMessage({ badgeCount: len });
+      sendMessage({ event: 'lookupsCount', count: len });
     });
   };
 
   updateCount();
 
   document.getElementById('btn-export').addEventListener('click', () => {
-    switchSteps(3);
+    sendMessage({ event: 'exportCards' });
+    switchSteps(1);
   });
 
   document.getElementById('btn-clear').addEventListener('click', () => {
-    switchSteps(4);
+    switchSteps(3);
   });
 
   document.getElementById('btn-yes').addEventListener('click', () => {
     storageClear();
-    switchSteps(5);
+    switchSteps(4);
 
     setTimeout(updateCount, 1000);
   });
 
   document.getElementById('btn-no').addEventListener('click', () => {
-    switchSteps(1);
-  });
-
-  document.getElementById('btn-basic').addEventListener('click', () => {
-    sendMessage({ exportCards: 'basic' });
-    switchSteps(1);
-  });
-
-  document.getElementById('btn-cloze').addEventListener('click', () => {
-    sendMessage({ exportCards: 'cloze' });
     switchSteps(1);
   });
 

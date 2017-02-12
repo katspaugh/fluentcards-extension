@@ -1,10 +1,10 @@
-import ajax from './ajax.js';
+import ajax from '../utils/ajax.js';
 
 const apiKeys = [
   'OTdiYTM4N2ItMGVlZC00NTI3LTllMGEtYTc1NjQ1MDMyMzMx'
 ];
 
-const endpoint = 'http://www.dictionaryapi.com/api/v1/references/collegiate/xml';
+const endpoint = 'https://www.dictionaryapi.com/api/v1/references/collegiate/xml';
 
 function xmlToJson(xml) {
 	if (!xml.hasChildNodes()) return null;
@@ -17,6 +17,10 @@ function xmlToJson(xml) {
     if (item.nodeType == 3) {
       if (len == 1) return item.nodeValue;
       continue;
+    }
+
+    if (item.nodeName == 'it') {
+      return xml.textContent;
     }
 
 		let nodeName = item.nodeName;

@@ -1,24 +1,8 @@
-import chrome from './chrome.js';
-import debounce from './debounce.js';
-import Popup from './popup.jsx';
-import userOptions from './user-options.js';
-import lookupsStore from './lookups-store.js';
+import lookupsStore from './stores/lookups-store.js';
+import debounce from './utils/debounce.js';
+import { isValidSelection } from './utils/text-utils.js';
+import Popup from './components/popup.jsx';
 
-
-function exportCards(mode) {
-  lookupsStore.getCsv(mode).then((csv) => {
-    let url = 'data:text/plain;charset=utf-8,' + encodeURIComponent(csv)
-    window.open(url);
-  });
-}
-
-function isValidSelection (sel) {
-  let selectedText = sel.toString();
-  if (!selectedText) return false;
-  if (/^[0-9,.:;/?!@#$%&*()=_+<>|"'}{\[\]«»‘’“”~`±§ -]+$/.test(selectedText)) return false;
-  let wordsLen = selectedText.trim().split(' ').length;
-  return wordsLen >= 1 && wordsLen <= 3;
-}
 
 function initEvents() {
   let isDoubleClick = false;
@@ -34,24 +18,33 @@ function initEvents() {
       popup = null;
     }
 
-    // Find the qualifying selection
     let sel = window.getSelection();
-    if (!isValidSelection(sel)) return;
+    if (!isValidSelection(sel.toString())) return;
 
     popup = new Popup(sel, isDoubleClick);
     isDoubleClick = false;
   }, 100), false);
 }
 
-function initRuntime() {
-  chrome.runtime.onMessage.addListener((msg) => {
-    if (msg.exportCards) exportCards(msg.exportCards);
-  });
+function insertScript(src) {
+  var node = document.getElementsByTagName('head')[0];
+  var script = document.createElement('script');
+  script.setAttribute('src', 'data:text/javascript;charset=utf-8,' + encodeURIComponent(src));
+  document.body.appendChild(script);
+}
+
+function exportCards() {
+  if (!/fluentcards/.test(window.location.hostname)) return;
+
+  lookupsStore.getAll()
+    .then((items) => {
+      insertScript('window.fluentcards = ' + JSON.stringify(items));
+    });
 }
 
 function init() {
   initEvents();
-  initRuntime();
+  exportCards();
 }
 
 init();

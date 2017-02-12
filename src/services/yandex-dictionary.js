@@ -1,4 +1,4 @@
-import ajax from './ajax.js';
+import ajax from '../utils/ajax.js';
 
 const apiKeys = [
   'ZGljdC4xLjEuMjAxNTA4MTdUMDgxMTAzWi43YWM4YTUzODk0OTFjYTE1LjkxNjQwNjQwNzEyM2Y2MDlmZDBiZjkzYzEyMjE5MGQ1NmFmNjM1OWM=',
@@ -10,6 +10,8 @@ const endpoint = 'https://dictionary.yandex.net/api/v1/dicservice.json/lookup?&f
 
 const langs = [ 'be-be','be-ru','bg-ru','cs-en','cs-ru','da-en','da-ru','de-de','de-en','de-ru','de-tr','el-en','el-ru','en-cs','en-da','en-de','en-el','en-en','en-es','en-et','en-fi','en-fr','en-it','en-lt','en-lv','en-nl','en-no','en-pt','en-ru','en-sk','en-sv','en-tr','en-uk','es-en','es-es','es-ru','et-en','et-ru','fi-en','fi-ru','fr-en','fr-fr','fr-ru','it-en','it-it','it-ru','lt-en','lt-ru','lv-en','lv-ru','nl-en','nl-ru','no-en','no-ru','pl-ru','pt-en','pt-ru','ru-be','ru-bg','ru-cs','ru-da','ru-de','ru-el','ru-en','ru-es','ru-et','ru-fi','ru-fr','ru-it','ru-lt','ru-lv','ru-nl','ru-no','ru-pl','ru-pt','ru-ru','ru-sk','ru-sv','ru-tr','ru-tt','ru-uk','sk-en','sk-ru','sv-en','sv-ru','tr-de','tr-en','tr-ru','tt-ru','uk-en','uk-ru','uk-uk' ];
 
+const defaultLang = 'en';
+
 /**
  * Download a dictionary definition of a word
  *
@@ -19,10 +21,18 @@ const langs = [ 'be-be','be-ru','bg-ru','cs-en','cs-ru','da-en','da-ru','de-de',
  * @returns {promise}
  */
 export default function yandexDefine(text, lang, targetLang) {
-  let langPair = lang + '-' + targetLang;
+  let langPair = `${ lang }-${ targetLang }`;
 
-  if (langs.indexOf(langPair) == -1) {
-    langPair = lang + '-' + 'en';
+  if (!langs.includes(langPair)) {
+    langPair = `${ defaultLang }-${ targetLang }`;
+  }
+
+  if (!langs.includes(langPair)) {
+    langPair = `${ defaultLang }-${ defaultLang }`;
+  }
+
+  if (!langs.includes(langPair)) {
+    return Promise.reject('Missing language pair');
   }
 
   let url = [
@@ -33,7 +43,6 @@ export default function yandexDefine(text, lang, targetLang) {
   ].join('&');
 
   return ajax(url, { json: true }).then((data) => {
-    data.source = 'yandex';
     if (data && data.def && data.def.length) return data;
 
     throw new Error('No data');

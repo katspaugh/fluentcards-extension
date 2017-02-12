@@ -1,5 +1,5 @@
 /**
- * Make an XMLHttprequest
+ * Make an XMLHttpRequest
  *
  * @param {string} url
  * @param {object} options

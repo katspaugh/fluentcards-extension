@@ -12,21 +12,21 @@ export default class FcCard extends React.Component {
     let data = this.props.data;
     let items = data.def
         .slice(0, maxDefinitions)
-        .map((def, index) => <FcDef key={'def' + index} data={ def } />);
+        .map((def, i) => <FcDef key={ i } data={ def } />);
 
     let Brandings = {};
 
     Brandings.yandex = (
-      <fc-div class="fc-yandex">
+      <div className="fc-yandex">
         Powered by
         <a href="https://tech.yandex.com/dictionary/" target="_blank">
           <fc-span>Yandex.Dictionary</fc-span>
         </a>
-      </fc-div>
+      </div>
     );
 
     Brandings.mw = (
-      <fc-div class="fc-mw"></fc-div>
+      <div className="fc-mw"></div>
     );
 
     Brandings.fluentcards = (
@@ -44,11 +44,11 @@ export default class FcCard extends React.Component {
     }
 
     return (
-      <fc-card>
-        <fc-div class="fc-brand">{brandLogo}</fc-div>
-        {items}
-        {poweredBy}
-      </fc-card>
+      <div className="fc-card">
+        <div className="fc-brand">{ brandLogo }</div>
+        { items }
+        { poweredBy }
+      </div>
     );
   }
 }

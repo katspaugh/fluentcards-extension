@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {getContext} from './text-utils.js';
+import { getContext } from '../utils/text-utils.js';
 import FcUi from './ui.jsx';
 
 
@@ -33,7 +33,7 @@ export default class Popup {
     let context = extractContext(sel);
 
     ReactDOM.render(
-      <FcUi word={word} context={context} doubleClick={isDoubleClick} />,
+      <FcUi word={ word } context={ context } doubleClick={ isDoubleClick } />,
       div
     );
     document.body.appendChild(div);

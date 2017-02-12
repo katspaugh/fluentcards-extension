@@ -1,9 +1,11 @@
 {
   "name": "Fluentcards Dictionary",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Look up words in a dictionary and save as flashcards.",
   "permissions": [
-    "<all_urls>",
+    "https://www.dictionaryapi.com/api/v1/references/collegiate/xml*",
+    "https://dictionary.yandex.net/api/v1/dicservice.json/lookup*",
+    "https://translate.yandex.net/api/v1.5/tr.json/translate*",
     "storage"
   ],
 
