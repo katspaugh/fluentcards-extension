@@ -1,6 +1,8 @@
 import lookupsStore from './stores/lookups-store.js';
 import debounce from './utils/debounce.js';
 import { isValidSelection } from './utils/text-utils.js';
+import userOptions from './user-options.js';
+import config from './config.js';
 import Popup from './components/popup.jsx';
 
 
@@ -12,7 +14,7 @@ function initEvents() {
     isDoubleClick = true;
   });
 
-  document.addEventListener('selectionchange', debounce((e) => {
+  document.addEventListener('selectionchange', (e) => {
     if (popup) {
       popup.remove();
       popup = null;
@@ -21,9 +23,9 @@ function initEvents() {
     let sel = window.getSelection();
     if (!isValidSelection(sel.toString())) return;
 
-    popup = new Popup(sel, isDoubleClick);
+    popup = new Popup(sel, isDoubleClick && userOptions.behavior == config.behaviours.doubleClick);
     isDoubleClick = false;
-  }, 100), false);
+  }, false);
 }
 
 function insertScript(src) {

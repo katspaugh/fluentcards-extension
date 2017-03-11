@@ -14,7 +14,7 @@ function extractContext(sel) {
 }
 
 export default class Popup {
-  constructor(sel, isDoubleClick) {
+  constructor(sel, loadAtOnce) {
     let div = document.createElement('div');
     let range = sel.getRangeAt(0);
     let bbox = range.getBoundingClientRect();
@@ -33,7 +33,7 @@ export default class Popup {
     let context = extractContext(sel);
 
     ReactDOM.render(
-      <FcUi word={ word } context={ context } doubleClick={ isDoubleClick } />,
+      <FcUi word={ word } context={ context } loadAtOnce={ loadAtOnce } />,
       div
     );
     document.body.appendChild(div);

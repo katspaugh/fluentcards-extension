@@ -3,20 +3,14 @@ import React from 'react';
 import lookup from '../services/lookup.js';
 import speak from '../services/speech.js';
 import userOptions from '../user-options.js';
+import config from '../config.js';
 import lookupsStore from '../stores/lookups-store.js';
 import FcButton from './button.jsx';
 import FcCard from './card.jsx';
 
-const Behaviours = {
-  doubleClick: 'double-click',
-  buttonClick: 'button-click'
-};
-
 export default class Ui extends React.Component {
   constructor(props) {
     super(props);
-
-    this.loadImmediately = this.props.doubleClick && userOptions.behavior == Behaviours.doubleClick;
 
     this.state = {
       buttonAnimated: false,
@@ -32,7 +26,7 @@ export default class Ui extends React.Component {
 
     return lookup(this.props.word, this.props.context, userOptions.targetLanguage)
       .then((result) => {
-        this.setState({ buttonAnimated: false, buttonVisible: false, data: result.data });
+        this.setState({ buttonAnimated: false, buttonVisible: false, data: result });
 
         lookupsStore.saveOne(result, this.props.word, this.props.context);
 
@@ -52,7 +46,7 @@ export default class Ui extends React.Component {
   }
 
   componentDidMount() {
-    if (this.loadImmediately) this.loadData();
+    if (this.props.loadAtOnce) this.loadData();
   }
 
   render() {

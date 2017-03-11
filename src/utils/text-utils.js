@@ -12,8 +12,21 @@ export function getContext(phrase, text) {
 }
 
 export function isValidSelection (selectedText) {
-  if (!selectedText) return false;
+  if (!selectedText || !selectedText.trim()) return false;
   if (/^[0-9,.:;/?!@#$%&*()=_+<>|"'}{\[\]«»‘’“”~`±§ -]+$/.test(selectedText)) return false;
   let wordsLen = selectedText.trim().split(' ').length;
   return wordsLen >= 1 && wordsLen <= 3;
+}
+
+export function getArticle (data, lang) {
+  const articles = {
+    de: {
+      pl: 'die',
+      m: 'der',
+      f: 'die',
+      n: 'das'
+    }
+  };
+
+  return articles[lang] ? articles[lang][data.num] || articles[lang][data.gen] : null;
 }
