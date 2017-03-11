@@ -28,17 +28,17 @@ export default class Ui extends React.Component {
   }
 
   loadData() {
-    this.setState({ animated: true });
+    this.setState({ buttonAnimated: true });
 
     return lookup(this.props.word, this.props.context, userOptions.targetLanguage)
       .then((result) => {
-        this.setState({ animated: false, buttonVisible: false, data: result.data });
+        this.setState({ buttonAnimated: false, buttonVisible: false, data: result.data });
 
         lookupsStore.saveOne(result, this.props.word, this.props.context);
 
         if (userOptions.ttsEnabled) speak(this.props.word, result.lang);
       })
-      .catch(() => this.setState({ animated: false, buttonVisible: false, data: null }));
+      .catch(() => this.setState({ buttonAnimated: false, buttonVisible: false, data: null }));
   }
 
   clickHandler(e) {
