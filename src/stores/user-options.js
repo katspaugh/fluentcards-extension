@@ -1,4 +1,4 @@
-import storage from './services/storage.js';
+import storage from '../services/storage.js';
 
 const defaultOptions = {
   targetLanguage: 'en',

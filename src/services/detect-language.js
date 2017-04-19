@@ -1,13 +1,15 @@
 import chrome from './chrome.js';
 
-const defaultLang = 'en';
+const defaultLanguage = 'en';
 
 export default function detectLanguage(text) {
   return new Promise((resolve, reject) => {
     chrome.i18n.detectLanguage(text, (result) => {
-      let lang = (result && result.languages && result.languages.length) ?
-          result.languages[0].language : defaultLang;
-      resolve(lang);
+      if (!result || !result.isReliable || !result.languages.length) {
+        resolve(defaultLanguage);
+      } else {
+        resolve(result.languages[0].language);
+      }
     });
   });
 }

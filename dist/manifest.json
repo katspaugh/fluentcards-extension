@@ -3,9 +3,8 @@
   "version": "0.3.2",
   "description": "Look up words in a dictionary and save as flashcards.",
   "permissions": [
-    "https://www.dictionaryapi.com/api/v1/references/collegiate/xml*",
-    "https://dictionary.yandex.net/api/v1/dicservice.json/lookup*",
-    "https://translate.yandex.net/api/v1.5/tr.json/translate*",
+    "tabs",
+    "<all_urls>",
     "storage"
   ],
 

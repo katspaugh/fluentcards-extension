@@ -1,10 +1,16 @@
 import lookupsStore from './stores/lookups-store.js';
 import debounce from './utils/debounce.js';
 import { isValidSelection } from './utils/text-utils.js';
-import userOptions from './user-options.js';
+import userOptions from './stores/user-options.js';
+import storage from './services/storage.js';
 import config from './config.js';
 import Popup from './components/popup.jsx';
 
+
+function isDomainEnabled() {
+  const domain = window.location.hostname;
+  return storage.get(domain).then(data => data[domain]);
+}
 
 function initEvents() {
   let isDoubleClick = false;
@@ -45,8 +51,11 @@ function exportCards() {
 }
 
 function init() {
-  initEvents();
   exportCards();
+
+  isDomainEnabled().then(isEnabled => {
+    if (isEnabled) initEvents();
+  });
 }
 
 init();
