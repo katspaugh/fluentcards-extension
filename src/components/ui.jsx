@@ -3,7 +3,6 @@ import React from 'react';
 import lookup from '../services/lookup.js';
 import speak from '../services/speech.js';
 import userOptions from '../stores/user-options.js';
-import config from '../config.js';
 import lookupsStore from '../stores/lookups-store.js';
 import FcButton from './button.jsx';
 import FcCard from './card.jsx';

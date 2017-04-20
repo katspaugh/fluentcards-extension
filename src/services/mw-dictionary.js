@@ -9,10 +9,10 @@ const endpoint = 'https://www.dictionaryapi.com/api/v1/references/collegiate/xml
 function xmlToJson(xml) {
 	if (!xml.hasChildNodes()) return null;
 
-	let obj = {};
+	const obj = {};
 
 	for (let i = 0, len = xml.childNodes.length; i < len; i++) {
-		let item = xml.childNodes.item(i);
+		const item = xml.childNodes.item(i);
 
     if (item.nodeType == 3) {
       if (len == 1) return item.nodeValue;
@@ -23,7 +23,7 @@ function xmlToJson(xml) {
       return xml.textContent;
     }
 
-		let nodeName = item.nodeName;
+		const nodeName = item.nodeName;
 		if (obj[nodeName] == null) {
 			obj[nodeName] = xmlToJson(item);
 		} else {
@@ -44,28 +44,43 @@ function xmlToJson(xml) {
  * @returns {promise}
  */
 export default function mwDefine(text) {
-  let key = atob(apiKeys[~~(Math.random() * apiKeys.length)]);
-  let word = encodeURIComponent(text);
-  let url = `${ endpoint }/${ word }?key=${ key }`;
+  const key = atob(apiKeys[~~(Math.random() * apiKeys.length)]);
+  const word = encodeURIComponent(text);
+  const url = `${ endpoint }/${ word }?key=${ key }`;
 
   return ajax(url, { xml: true }).then((xml) => {
-    let json = xmlToJson(xml);
-    let entry = json.entry_list.entry;
+    const json = xmlToJson(xml);
+    const entry = json.entry_list.entry;
+    let suggestion = json.entry_list.suggestion;
+    if (suggestion instanceof Array) suggestion = suggestion[0];
 
-    let defs = (entry instanceof Array ? entry : [ entry ])
-        .filter((entry) => entry.def || entry.cx)
-        .map((entry) => {
-          let dts = entry.def ? entry.def.dt : entry.cx ? entry.cx.cl + ' ' + entry.cx.ct : [];
+    if (!entry && suggestion) {
+      return mwDefine(suggestion);
+    }
 
-          let trs = (dts instanceof Array ? dts : [ dts ])
-            .filter((dt) => typeof dt == 'string')
-            .map((dt) => ({ text: dt.replace(/^:/, '') }))
+    if (!entry && !suggestion) throw new Error('No data');
 
-          if (!trs.length) return null;
+    const defs = (entry instanceof Array ? entry : [ entry ])
+      .filter(entry => entry && (entry.def || entry.cx))
+      .map(entry => {
+        let dts = entry.def ? entry.def.dt : entry.cx ? entry.cx.cl + ' ' + entry.cx.ct : [];
+        dts = (dts instanceof Array ? dts : [ dts ]);
 
-          return { text: entry.ew, pos: entry.fl, ts: entry.pr, tr: trs };
-        })
-        .filter(Boolean);
+        let trs = dts.filter(dt => typeof dt == 'string' && dt.length);
+
+        if (!trs.length) {
+          trs = dts
+            .filter(dt => dt.sx && dt.sx.length)
+            .map(dt => dt.sx instanceof Array ? dt.sx.join('; ') : dt.sx);
+        }
+
+        if (!trs.length) return null;
+
+        trs = trs.map(dt => ({ text: dt.replace(/^:/, '') }));
+
+        return { text: entry.ew, pos: entry.fl, ts: entry.pr, tr: trs };
+      })
+      .filter(Boolean);
 
     if (defs.length) return { source: 'mw', def: defs.slice(0, 1) };
 

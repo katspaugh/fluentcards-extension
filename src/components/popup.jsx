@@ -15,22 +15,27 @@ function extractContext(sel) {
 
 export default class Popup {
   constructor(sel, loadAtOnce) {
-    let div = document.createElement('div');
-    let range = sel.getRangeAt(0);
-    let bbox = range.getBoundingClientRect();
-    let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-    let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
+    const div = document.createElement('div');
+    const range = sel.getRangeAt(0);
+    const bbox = range.getBoundingClientRect();
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    const scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
+    const bboxBottom = bbox.bottom;
+    const bboxLeft = bbox.left;
+    // Collapse the selection range horizontally to align to the right
+    // NB: do this after caching the original bbox
     range.collapse();
-    let rightBbox = range.getBoundingClientRect();
+    const rightBbox = range.getBoundingClientRect();
+    const rightBoxLeft = rightBbox.left;
 
     div.style.position = 'absolute';
     div.style.zIndex = 1000;
-    div.style.left = (bbox.left + scrollLeft) + 'px';
-    div.style.top = (bbox.bottom + scrollTop) + 'px';
-    div.style.width = (rightBbox.left - bbox.left) + 'px';
+    div.style.top = (bboxBottom + scrollTop) + 'px';
+    div.style.left = (bboxLeft + scrollLeft) + 'px';
+    div.style.width = (rightBoxLeft - bboxLeft) + 'px';
 
-    let word = extractWord(sel);
-    let context = extractContext(sel);
+    const word = extractWord(sel);
+    const context = extractContext(sel);
 
     ReactDOM.render(
       <FcUi word={ word } context={ context } loadAtOnce={ loadAtOnce } />,

@@ -16,9 +16,9 @@ const endpoint = 'https://translate.yandex.net/api/v1.5/tr.json/translate?format
  * @returns {promise}
  */
 export default function yandexTranslate(text, lang, targetLang) {
-  let langPair = lang + '-' + targetLang;
+  const langPair = lang + '-' + targetLang;
 
-  let url = [
+  const url = [
     endpoint,
     'key=' + atob(apiKeys[~~(Math.random() * apiKeys.length)]),
     'lang=' + langPair,
@@ -26,12 +26,7 @@ export default function yandexTranslate(text, lang, targetLang) {
   ].join('&');
 
   return ajax(url, { json: true }).then((data) => {
-    let translated = data.text[0];
-
-    if (translated == text) {
-      throw new Error('No translation');
-    }
-
+    const translated = data.text[0];
     return { def: [ { text: text, tr: [ { text: translated } ] } ] };
   });
 };

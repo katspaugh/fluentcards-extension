@@ -1,9 +1,9 @@
 import lookupsStore from './stores/lookups-store.js';
-import debounce from './utils/debounce.js';
+import debounce from 'lodash/debounce';
 import { isValidSelection } from './utils/text-utils.js';
+import { cancelRequests } from './utils/ajax.js';
 import userOptions from './stores/user-options.js';
 import storage from './services/storage.js';
-import config from './config.js';
 import Popup from './components/popup.jsx';
 
 
@@ -20,23 +20,25 @@ function initEvents() {
     isDoubleClick = true;
   });
 
-  document.addEventListener('selectionchange', (e) => {
+  document.addEventListener('selectionchange', debounce((e) => {
     if (popup) {
       popup.remove();
       popup = null;
+      cancelRequests();
     }
 
-    let sel = window.getSelection();
+    const sel = window.getSelection();
     if (!isValidSelection(sel.toString())) return;
 
-    popup = new Popup(sel, isDoubleClick && userOptions.behavior == config.behaviours.doubleClick);
+    const loadImmediately = isDoubleClick && userOptions.behavior == userOptions.DOUBLE_CLICK;
+    popup = new Popup(sel, loadImmediately);
     isDoubleClick = false;
-  }, false);
+  }, 10), false);
 }
 
 function insertScript(src) {
-  var node = document.getElementsByTagName('head')[0];
-  var script = document.createElement('script');
+  const node = document.getElementsByTagName('head')[0];
+  const script = document.createElement('script');
   script.setAttribute('src', 'data:text/javascript;charset=utf-8,' + encodeURIComponent(src));
   document.body.appendChild(script);
 }

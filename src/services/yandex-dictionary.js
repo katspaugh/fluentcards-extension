@@ -35,7 +35,7 @@ export default function yandexDefine(text, lang, targetLang) {
     return Promise.reject('Missing language pair');
   }
 
-  let url = [
+  const url = [
     endpoint,
     'key=' + atob(apiKeys[~~(Math.random() * apiKeys.length)]),
     'lang=' + langPair,

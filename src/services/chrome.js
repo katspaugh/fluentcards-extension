@@ -7,10 +7,6 @@ const mockChrome = {
     }
   },
 
-  i18n: {
-    detectLanguage: (text, callback) => callback('en')
-  },
-
   runtime: {
     sendMessage: () => null,
 

@@ -1,3 +1,8 @@
+let requests = [];
+
+const registerRequest = (req) => requests.push(req);
+const unregisterRequest = (req) => requests = requests.filter(item => item !== req);
+
 /**
  * Make an XMLHttpRequest
  *
@@ -11,7 +16,7 @@ export default function ajax(url, options) {
   if (options.xml) xhr.overrideMimeType('text/xml');
   xhr.send();
 
-  return new Promise((resolve, reject) => {
+  const promise = new Promise((resolve, reject) => {
     xhr.onload = () => {
       if (!(xhr.readyState == xhr.DONE && xhr.status == 200)) return;
 
@@ -33,8 +38,24 @@ export default function ajax(url, options) {
       resolve(data);
     };
 
-    xhr.onerror = () => {
+    xhr.onerror = xhr.onabort = () => {
       reject(xhr.statusText);
     };
   });
+
+  registerRequest(xhr);
+
+  return promise
+    .catch(err => {
+      unregisterRequest(xhr);
+      throw err;
+    })
+    .then(data => {
+      unregisterRequest(xhr);
+      return data;
+    })
+}
+
+export function cancelRequests() {
+  requests.forEach(xhr => xhr.abort());
 }
