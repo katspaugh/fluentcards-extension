@@ -1,6 +1,6 @@
 import storage from '../services/storage.js';
 
-const defaultBehavior = 'doubleClick';
+const defaultBehavior = 'double-click';
 
 const defaultOptions = {
   targetLanguage: 'en',

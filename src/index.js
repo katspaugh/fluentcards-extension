@@ -9,7 +9,8 @@ import Popup from './components/popup.jsx';
 
 function isDomainEnabled() {
   const domain = window.location.hostname;
-  return storage.get(domain).then(data => data[domain]);
+  return storage.get(domain)
+    .then(data => data[domain] == null ? true : data[domain]);
 }
 
 function initEvents() {
@@ -49,6 +50,10 @@ function exportCards() {
   lookupsStore.getAll()
     .then((items) => {
       insertScript('window.fluentcards = ' + JSON.stringify(items));
+
+      setTimeout(() => {
+        lookupsStore.clear();
+      }, 3000);
     });
 }
 

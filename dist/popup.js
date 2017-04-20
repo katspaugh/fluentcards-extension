@@ -4,20 +4,19 @@ function exportContent() {
   chrome.runtime.sendMessage({ event: 'exportCards' });
 }
 
-function checkContent() {
+function getStore(key) {
   return new Promise(resolve => {
-    chrome.storage.sync.get(null, data => {
-      resolve(Object.keys(data).some((key) => !isNaN(Number(key))));
-    });
+    chrome.storage.sync.get(key, data => resolve(data[key]));
   });
 }
 
+function getCount() {
+  return getStore('count');
+}
+
 function isDomainEnabled(domain) {
-  return new Promise(resolve => {
-    chrome.storage.sync.get(domain, data => {
-      resolve(data ? data[domain] : true);
-    });
-  });
+  return getStore(domain)
+    .then(isEnabled => (isEnabled == null ? true : isEnabled));
 }
 
 function getDomain() {
@@ -55,8 +54,8 @@ function openOptions() {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-  checkContent().then(hasContent => {
-    if (!hasContent) {
+  getCount().then(count => {
+    if (count == 0) {
       document.body.className = 'empty-content';
     }
   });

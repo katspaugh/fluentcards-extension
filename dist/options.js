@@ -1,7 +1,7 @@
 const defaultOptions = {
-  targetLanguage: chrome.i18n.getUILanguage().split('-')[0],
-  behavior: 'button-click',
-  ttsEnabled: true
+  targetLanguage: 'en',
+  behavior: 'double-click',
+  ttsEnabled: false
 };
 
 // Saves options to chrome.storage.sync.
