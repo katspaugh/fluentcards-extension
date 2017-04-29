@@ -100,14 +100,14 @@
     visibility: hidden !important;
 }
 
-.fc-card .fc-yandex fc-span {
+.fc-card .fc-yandex span {
     visibility: visible !important;
     color: #888;
     font-weight: 100;
     text-decoration: underline;
 }
 
-.fc-card .fc-yandex fc-span:hover {
+.fc-card .fc-yandex span:hover {
     visibility: visible !important;
     color: #777;
     text-decoration: none;

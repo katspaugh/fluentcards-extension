@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import lookup from '../services/lookup.js';
 import speak from '../services/speech.js';
@@ -7,7 +7,7 @@ import lookupsStore from '../stores/lookups-store.js';
 import FcButton from './button.jsx';
 import FcCard from './card.jsx';
 
-export default class Ui extends React.Component {
+export default class Ui extends Component {
   constructor(props) {
     super(props);
 

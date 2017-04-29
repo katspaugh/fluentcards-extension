@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-export default class FcButton extends React.Component {
+export default class FcButton extends Component {
   render() {
     let classes = [ 'fc-button' ];
     if (this.props.animated) classes.push('fc-button-animated');

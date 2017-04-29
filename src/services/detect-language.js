@@ -12,13 +12,9 @@ const defaultLanguage = 'en';
  * Download a translation for text
  *
  * @param {string} text
- * @param {string} lang
- * @param {string} targetLang
  * @returns {promise}
  */
-export default function yandexTranslate(text, lang, targetLang) {
-  const langPair = lang + '-' + targetLang;
-
+export default function detectLanguage(text) {
   const url = [
     endpoint,
     'key=' + atob(apiKeys[~~(Math.random() * apiKeys.length)]),

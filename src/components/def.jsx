@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { getArticle } from '../utils/text-utils.js';
 
 const maxTrs = 3;
 
-export default class FcDef extends React.Component {
+export default class FcDef extends Component {
   render() {
     const data = this.props.data;
     const trs = (data.tr || []).slice(0, maxTrs);

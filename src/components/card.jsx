@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import FcButton from './button.jsx';
 import FcDef from './def.jsx';
 
@@ -8,7 +8,7 @@ const Brandings = {
   yandex: (
     <div className="fc-yandex">
       Powered by <a href="https://tech.yandex.com/dictionary/" target="_blank">
-        <fc-span>Yandex.Dictionary</fc-span>
+        <span>Yandex.Dictionary</span>
       </a>
     </div>
   ),
@@ -18,7 +18,7 @@ const Brandings = {
   )
 };
 
-export default class FcCard extends React.Component {
+export default class FcCard extends Component {
   render() {
     if (!this.props.data) return null;
 

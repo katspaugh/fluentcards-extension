@@ -21,7 +21,7 @@ function initEvents() {
     isDoubleClick = true;
   });
 
-  document.addEventListener('selectionchange', debounce((e) => {
+  document.addEventListener('selectionchange', debounce(() => {
     if (popup) {
       popup.remove();
       popup = null;
@@ -38,7 +38,6 @@ function initEvents() {
 }
 
 function insertScript(src) {
-  const node = document.getElementsByTagName('head')[0];
   const script = document.createElement('script');
   script.setAttribute('src', 'data:text/javascript;charset=utf-8,' + encodeURIComponent(src));
   document.body.appendChild(script);

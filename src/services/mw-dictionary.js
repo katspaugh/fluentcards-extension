@@ -7,12 +7,12 @@ const apiKeys = [
 const endpoint = 'https://www.dictionaryapi.com/api/v1/references/collegiate/xml';
 
 function xmlToJson(xml) {
-	if (!xml.hasChildNodes()) return null;
+  if (!xml.hasChildNodes()) return null;
 
-	const obj = {};
+  const obj = {};
 
-	for (let i = 0, len = xml.childNodes.length; i < len; i++) {
-		const item = xml.childNodes.item(i);
+  for (let i = 0, len = xml.childNodes.length; i < len; i++) {
+    const item = xml.childNodes.item(i);
 
     if (item.nodeType == 3) {
       if (len == 1) return item.nodeValue;
@@ -23,18 +23,18 @@ function xmlToJson(xml) {
       return xml.textContent;
     }
 
-		const nodeName = item.nodeName;
-		if (obj[nodeName] == null) {
-			obj[nodeName] = xmlToJson(item);
-		} else {
-			if (!(obj[nodeName] instanceof Array)) {
-				obj[nodeName] = [ obj[nodeName] ];
-			}
-			obj[nodeName].push(xmlToJson(item));
-		}
+    const nodeName = item.nodeName;
+    if (obj[nodeName] == null) {
+      obj[nodeName] = xmlToJson(item);
+    } else {
+      if (!(obj[nodeName] instanceof Array)) {
+        obj[nodeName] = [ obj[nodeName] ];
+      }
+      obj[nodeName].push(xmlToJson(item));
+    }
   }
 
-	return obj;
+  return obj;
 };
 
 /**

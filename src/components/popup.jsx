@@ -29,7 +29,7 @@ export default class Popup {
     const rightBoxLeft = rightBbox.left;
 
     div.style.position = 'absolute';
-    div.style.zIndex = 1000;
+    div.style.zIndex = '1000';
     div.style.top = (bboxBottom + scrollTop) + 'px';
     div.style.left = (bboxLeft + scrollLeft) + 'px';
     div.style.width = (rightBoxLeft - bboxLeft) + 'px';

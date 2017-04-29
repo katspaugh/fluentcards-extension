@@ -7,7 +7,7 @@ const unregisterRequest = (req) => requests = requests.filter(item => item !== r
  * Make an XMLHttpRequest
  *
  * @param {string} url
- * @param {object} options
+ * @param {any} options
  * @returns {promise}
  */
 export default function ajax(url, options) {

@@ -18,6 +18,6 @@ const mockChrome = {
 
 
 
-const hasChrome = (typeof window !== 'undefined' && window.chrome && window.chrome.storage);
+const hasChrome = (typeof chrome !== 'undefined' && chrome.storage);
 
-export default (hasChrome ? window.chrome : mockChrome);
+export default (hasChrome ? chrome : mockChrome);

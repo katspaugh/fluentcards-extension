@@ -34,7 +34,6 @@ class LookupsStore {
   }
 
   saveOne(result, word, context) {
-    const location = typeof window !== 'undefined' ? window.location : {};
     const item = {
       language: result.lang,
       selection: word,
@@ -68,7 +67,7 @@ class LookupsStore {
           }, {});
 
         return chrome.storage.sync.clear(
-          () => chrome.storage.sync.set(toRestore)
+          () => chrome.storage.sync.set(toRestore, resolve)
         );
       });
     });
