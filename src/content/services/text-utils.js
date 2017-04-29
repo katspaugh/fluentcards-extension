@@ -12,10 +12,13 @@ export function getContext(word, text) {
 }
 
 export function isValidSelection (selectedText) {
+  const minWords = 1;
+  const maxWords = 5;
+
   if (!selectedText || !selectedText.trim()) return false;
   if (/^[0-9,.:;/?!@#$%&*()=_+<>|"'}{\[\]«»‘’“”~`±§ -]+$/.test(selectedText)) return false;
   let wordsLen = selectedText.trim().split(' ').length;
-  return wordsLen >= 1 && wordsLen <= 3;
+  return wordsLen >= minWords && wordsLen <= maxWords;
 }
 
 export function getArticle (data, lang) {

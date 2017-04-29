@@ -13,12 +13,12 @@ class UserOptions {
 
   get() {
     return storage.get('userOptions').then(options => {
-      return Object.assign({}, defaultOptions, options);
+      return Object.assign({}, defaultOptions, JSON.parse(options));
     });
   }
 
   set(options) {
-    return storage.set({ userOptions: options });
+    return storage.set({ userOptions: JSON.stringify(options) });
   }
 }
 

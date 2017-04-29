@@ -18,7 +18,7 @@ export default class Main extends Component {
     };
 
     this.userOptions = userOptions.getDefaults();
-    userOptions.get().then(data => this.userOptions = data);
+    userOptions.get().then(data => Object.assign(this.userOptions, data));
 
     this._clickHandler = this.clickHandler.bind(this);
   }
