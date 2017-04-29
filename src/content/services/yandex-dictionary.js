@@ -1,4 +1,4 @@
-import ajax from '../utils/ajax.js';
+import ajax from '../services/ajax.js';
 
 const apiKeys = [
   'ZGljdC4xLjEuMjAxNTA4MTdUMDgxMTAzWi43YWM4YTUzODk0OTFjYTE1LjkxNjQwNjQwNzEyM2Y2MDlmZDBiZjkzYzEyMjE5MGQ1NmFmNjM1OWM=',

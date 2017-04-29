@@ -1,4 +1,3 @@
 node_modules
 npm-debug.log
-dist/content_script.js
-dist/content_script.js.map
+dist/

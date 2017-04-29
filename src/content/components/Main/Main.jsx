@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
+import lookup from '../../services/lookup.js';
+import speak from '../../services/speech.js';
+import userOptions from '../../stores/user-options.js';
+import lookupsStore from '../../stores/lookups-store.js';
+import Button from '../Button/Button.jsx';
+import Card from '../Card/Card.jsx';
 
-import lookup from '../services/lookup.js';
-import speak from '../services/speech.js';
-import userOptions from '../stores/user-options.js';
-import lookupsStore from '../stores/lookups-store.js';
-import FcButton from './button.jsx';
-import FcCard from './card.jsx';
 
-export default class Ui extends Component {
+export default class Main extends Component {
   constructor(props) {
     super(props);
 
@@ -52,10 +52,10 @@ export default class Ui extends Component {
     return (
       <div>
         <div onClick={ this._clickHandler }>
-          <FcButton animated={ this.state.buttonAnimated } visible={ this.state.buttonVisible } />
+          <Button animated={ this.state.buttonAnimated } visible={ this.state.buttonVisible } />
         </div>
 
-        <FcCard data={ this.state.data } />
+        <Card data={ this.state.data } />
       </div>
     );
   }

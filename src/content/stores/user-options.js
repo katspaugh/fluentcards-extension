@@ -5,7 +5,7 @@ const defaultBehavior = 'double-click';
 const defaultOptions = {
   targetLanguage: 'en',
   behavior: defaultBehavior,
-  ttsEnabled: true
+  ttsEnabled: false
 };
 
 let userOptions = Object.assign({}, defaultOptions);

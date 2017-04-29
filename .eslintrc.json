@@ -6,6 +6,10 @@
     "node": true
   },
 
+  "globals": {
+    "chrome": true
+  },
+
   "plugins": [ "react" ],
 
   "parser": "babel-eslint",

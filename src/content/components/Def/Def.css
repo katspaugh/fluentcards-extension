@@ -1,0 +1,30 @@
+.def {
+  margin-bottom: 1em;
+}
+
+.word {
+  font-size: 1.5em;
+}
+
+.extra {
+  color: #888;
+  font-weight: 100;
+}
+
+.gen {
+  font-style: italic;
+}
+
+.ts {
+  color: #888;
+  font-weight: 100;
+  padding-top: 0.1em;
+}
+
+.pos {
+  font-size: 0.5em;
+  color: #ccc;
+  font-weight: 100;
+  padding-left: 0.5em;
+  vertical-align: super;
+}

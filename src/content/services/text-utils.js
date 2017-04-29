@@ -1,9 +1,9 @@
-export function getContext(phrase, text) {
+export function getContext(word, text) {
   let partialContext = text.replace(/\s+/g, ' ');
   let sentence = partialContext;
 
   partialContext.replace(/.+?[.!?]/g, s => {
-    if (s.indexOf(phrase) != -1) {
+    if (s.indexOf(word) != -1) {
       sentence = s;
     }
   });
