@@ -1,4 +1,4 @@
-chrome.runtime.onMessage.addListener((msg) => {
+chrome.runtime.onMessage.addListener(msg => {
   switch (msg && msg.event) {
       case 'lookupsCount':
         return chrome.browserAction.setBadgeText({ text: String(msg.count) });

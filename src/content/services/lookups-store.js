@@ -1,5 +1,5 @@
-import chrome from '../services/chrome.js';
-import storage from '../services/storage.js';
+import storage from '../../common/services/storage.js';
+
 
 class LookupsStore {
   constructor() {
@@ -11,35 +11,35 @@ class LookupsStore {
   }
 
   getCount() {
-    return storage.get('count').then(data => Number(data.count || 0));
+    return storage.get('count').then(count => Number(count || 0));
   }
 
   incrementCount() {
     return this.getCount()
       .then(count => {
         const newCount = count + 1;
-        return storage.set({ count: newCount })
-          .then(() => this.emitCount(newCount));
+        this.emitCount(newCount);
+        return storage.set({ count: newCount });
       });
   }
 
   getAll() {
     return storage.get().then((data) => {
       return Object.keys(data)
-        .filter((key) => !isNaN(key))
+        .filter((key) => !isNaN(Number(key)))
         .map(Number)
         .sort()
         .map((key) => data[key]);
     });
   }
 
-  saveOne(result, word, context) {
+  saveOne(word, context, info) {
     const item = {
-      language: result.lang,
+      language: info.lang,
       selection: word,
       context: context,
-      def: result.data.def.slice(0, 1),
-      url: typeof window !== 'undefined' ? window.location.href : ''
+      def: info.data.def.slice(0, 1),
+      url: window.location.href
     };
 
     const isEqual = (it) => it.selection == item.selection && it.context == item.context;
@@ -50,30 +50,27 @@ class LookupsStore {
       const toSave = {};
       toSave[Date.now()] = item;
 
-      return storage.set(toSave).then(() => {
-        this.incrementCount();
-      });
+      return storage.set(toSave)
+        .then(() => this.incrementCount());
     });
   }
 
   clear() {
-    return new Promise((resolve) => {
-      return chrome.storage.sync.get(null, (data) => {
-        const toRestore = Object.keys(data)
-          .filter(key => isNaN(key))
+    return storage.get()
+      .then(data => {
+        return Object.keys(data)
+          .filter(key => isNaN(Number(key)))
           .reduce((acc, key) => {
             acc[key] = data[key];
             return acc;
           }, {});
-
-        return chrome.storage.sync.clear(
-          () => chrome.storage.sync.set(toRestore, resolve)
-        );
+      })
+      .then(filteredData => {
+        return storage.clear().then(() => {
+          return storage.set(filteredData);
+        });
       });
-    });
   }
 }
 
-let store = new LookupsStore();
-
-export default store;
+export default new LookupsStore();

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import lookup from '../../services/lookup.js';
 import speak from '../../services/speech.js';
-import userOptions from '../../stores/user-options.js';
-import lookupsStore from '../../stores/lookups-store.js';
+import userOptions from '../../../common/services/user-options.js';
+import lookupsStore from '../../services/lookups-store.js';
 import Button from '../Button/Button.jsx';
 import Card from '../Card/Card.jsx';
 
@@ -17,19 +17,22 @@ export default class Main extends Component {
       data: null
     };
 
+    this.userOptions = userOptions.getDefaults();
+    userOptions.get().then(data => this.userOptions = data);
+
     this._clickHandler = this.clickHandler.bind(this);
   }
 
   loadData() {
     this.setState({ buttonAnimated: true });
 
-    return lookup(this.props.word, this.props.context, userOptions.targetLanguage)
+    return lookup(this.props.word, this.props.context, this.userOptions.targetLanguage)
       .then((result) => {
         this.setState({ buttonAnimated: false, buttonVisible: false, data: result });
 
-        lookupsStore.saveOne(result, this.props.word, this.props.context);
+        lookupsStore.saveOne(this.props.word, this.props.context, result);
 
-        if (userOptions.ttsEnabled) speak(this.props.word, result.lang);
+        if (this.userOptions.ttsEnabled) speak(this.props.word, result.lang);
       })
       .catch(() => this.setState({ buttonAnimated: false, buttonVisible: false, data: null }));
   }

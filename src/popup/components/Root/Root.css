@@ -1,0 +1,23 @@
+.container {
+  background: #FBEA31;
+  padding: 20px;
+  position: relative;
+}
+
+.heading {
+  font-size: 20px;
+  text-transform: lowercase;
+}
+
+.main {
+  margin-top: 20px;
+}
+
+.desc {
+  margin: 20px 0;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+}

@@ -20,24 +20,19 @@
   color: #888;
   font-weight: 100;
   text-align: right;
-  line-height: 14px;
 }
 
 .yandex a {
-  visibility: hidden !important;
+  color: #888 !important;
+  font-weight: 100 !important;
+  line-height: 1.2 !important;
+  text-decoration: underline !important;
+  border: none !important;
 }
 
-.yandex span {
-  visibility: visible !important;
-  color: #888;
-  font-weight: 100;
-  text-decoration: underline;
-}
-
-.yandex span:hover {
-  visibility: visible !important;
-  color: #777;
-  text-decoration: none;
+.yandex a:hover {
+  color: #777 !important;
+  text-decoration: none !important;
 }
 
 .mw {

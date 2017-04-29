@@ -1,4 +1,4 @@
-import lookupsStore from '../stores/lookups-store.js';
+import lookupsStore from '../services/lookups-store.js';
 
 
 function insertScript(src) {

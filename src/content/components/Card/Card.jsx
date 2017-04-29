@@ -8,7 +8,7 @@ const Brandings = {
   yandex: (
     <div className={ styles.yandex }>
       Powered by <a href="https://tech.yandex.com/dictionary/" target="_blank">
-        <span>Yandex.Dictionary</span>
+        Yandex.Dictionary
       </a>
     </div>
   ),
