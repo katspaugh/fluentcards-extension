@@ -13,7 +13,7 @@ class UserOptions {
 
   get() {
     return storage.get('userOptions').then(options => {
-      return Object.assign({}, defaultOptions, JSON.parse(options));
+      return Object.assign({}, defaultOptions, options ? JSON.parse(options) : {});
     });
   }
 

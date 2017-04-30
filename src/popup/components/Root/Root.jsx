@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import storage from '../../../common/services/storage';
 import Logo from '../Logo/Logo.jsx';
 import OptionsButton from '../OptionsButton/OptionsButton.jsx';
@@ -7,7 +7,7 @@ import ExportButton from '../ExportButton/ExportButton.jsx';
 import styles from './Root.css';
 
 
-export default class Root extends Component {
+export default class Root extends PureComponent {
   constructor() {
     super();
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import storage from '../../../common/services/storage';
 import styles from './DomainToggle.css';
 
@@ -35,7 +35,7 @@ function toggleSite(domain, isEnabled) {
   storage.set(data);
 }
 
-export default class DomainToggle extends Component {
+export default class DomainToggle extends PureComponent {
   constructor() {
     super();
 

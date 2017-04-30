@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { getArticle } from '../../services/text-utils.js';
 import styles from './Def.css';
 
 const maxTrs = 3;
 
-export default class Def extends Component {
+export default class Def extends PureComponent {
   render() {
     const data = this.props.data;
     const trs = (data.tr || []).slice(0, maxTrs);

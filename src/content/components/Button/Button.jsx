@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import classnames from 'classnames';
 import styles from './Button.css';
 
-export default class Button extends Component {
+export default class Button extends PureComponent {
   render() {
     const classes = classnames(styles.button, {
       [styles.buttonAnimated]: this.props.animated,

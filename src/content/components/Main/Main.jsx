@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import lookup from '../../services/lookup.js';
 import speak from '../../services/speech.js';
 import userOptions from '../../../common/services/user-options.js';
@@ -7,7 +7,7 @@ import Button from '../Button/Button.jsx';
 import Card from '../Card/Card.jsx';
 
 
-export default class Main extends Component {
+export default class Main extends PureComponent {
   constructor(props) {
     super(props);
 

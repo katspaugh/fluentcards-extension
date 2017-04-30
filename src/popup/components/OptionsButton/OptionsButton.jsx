@@ -6,7 +6,7 @@ function openOptions() {
   chrome.runtime.openOptionsPage();
 }
 
-export default function render(props) {
+export default function render() {
   return (
     <div className={ styles.optionsButton } title="Options" onClick={ openOptions }>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340.274 340.274">

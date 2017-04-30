@@ -6,7 +6,7 @@ function exportContent() {
   chrome.runtime.sendMessage({ event: 'exportCards' });
 }
 
-export default function render(props) {
+export default function render() {
   return (
     <button className={ styles.button } onClick={ exportContent }>
       View collected words

@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Logo.css';
 
-export default function render(props) {
+export default function render() {
   return (
     <a className={ styles.logo } href="https://fluentcards.com" target="_blank">
       <svg viewBox="0 0 72 28" xmlns="http://www.w3.org/2000/svg">

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Def from '../Def/Def.jsx';
 import styles from './Card.css';
 
@@ -18,7 +18,7 @@ const Brandings = {
   )
 };
 
-export default class Card extends Component {
+export default class Card extends PureComponent {
   render() {
     if (!this.props.data) return null;
 

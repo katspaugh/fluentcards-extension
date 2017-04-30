@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  devtool: 'source-map',
+  devtool: process.env.NODE_ENV === 'production' ? null : 'source-map',
   cache: true,
   debug: true,
 
@@ -36,7 +36,13 @@ module.exports = {
         from: 'src/options/index.html',
         to: path.resolve(__dirname, 'dist/options.html')
       }
-    ])
+    ]),
+
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production')
+      }
+    })
   ],
 
   module: {

@@ -1,7 +1,6 @@
-import storage from '../common/services/storage';
 import userOptions from '../common/services/user-options';
 
-// Save options to chrome.storage.sync.
+// Save options to the storage
 function saveOptions(form) {
   const data = {
     targetLanguage: form.elements.targetLanguage.value,
