@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { getArticle } from '../../services/text-utils.js';
+import SpeakButton from '../SpeakButton/SpeakButton.jsx';
 import styles from './Def.css';
 
 const maxTrs = 3;
@@ -30,6 +31,10 @@ export default class Def extends PureComponent {
         <div className={ styles.word }>
           { word }
           <span className={ styles.pos }>{ data.pos || '' }</span>
+        </div>
+
+        <div className={ styles.speak }>
+          <SpeakButton word={ word } lang={ this.props.lang } />
         </div>
 
         { extra }

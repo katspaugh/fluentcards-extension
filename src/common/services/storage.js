@@ -1,4 +1,4 @@
-const storage = chrome.storage.sync;
+const storage = chrome.storage.local;
 
 class Storage {
   set(data) {

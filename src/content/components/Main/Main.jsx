@@ -1,64 +1,54 @@
 import React, { PureComponent } from 'react';
+import userOptions from '../../../common/services/user-options'
 import lookup from '../../services/lookup.js';
+import lookupsStore from '../../services/lookups-store';
 import speak from '../../services/speech.js';
-import userOptions from '../../../common/services/user-options.js';
-import lookupsStore from '../../services/lookups-store.js';
-import Button from '../Button/Button.jsx';
 import Card from '../Card/Card.jsx';
+import styles from './Main.css';
+
+
+const options = userOptions.getDefaults();
+userOptions.get().then(data => Object.assign(options, data));
 
 
 export default class Main extends PureComponent {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.state = {
-      buttonAnimated: false,
-      buttonVisible: true,
       data: null
     };
 
-    this.userOptions = userOptions.getDefaults();
-    userOptions.get().then(data => Object.assign(this.userOptions, data));
+    this.onLoad = (result) => {
+      this.props.onLoad();
 
-    this._clickHandler = this.clickHandler.bind(this);
-  }
+      if (!result) return;
 
-  loadData() {
-    this.setState({ buttonAnimated: true });
+      // Display the definition
+      this.setState({ data: result });
 
-    return lookup(this.props.word, this.props.context, this.userOptions.targetLanguage)
-      .then((result) => {
-        this.setState({ buttonAnimated: false, buttonVisible: false, data: result });
+      // Save the lookup in the storage
+      lookupsStore.saveOne(this.props.word, this.props.context, result);
 
-        lookupsStore.saveOne(this.props.word, this.props.context, result);
-
-        if (this.userOptions.ttsEnabled) speak(this.props.word, result.lang);
-      })
-      .catch(() => this.setState({ buttonAnimated: false, buttonVisible: false, data: null }));
-  }
-
-  clickHandler(e) {
-    e.preventDefault();
-
-    this.setState({
-      data: { def: [{ text: 'Loading...' }] }
-    });
-
-    this.loadData();
+      // Speak the selection
+      if (options.ttsEnabled) speak(this.props.word, result.lang);
+    };
   }
 
   componentDidMount() {
-    if (this.props.loadAtOnce) this.loadData();
+    lookup(this.props.word, this.props.context, options.targetLanguage)
+      .then(data => this.onLoad(data))
+      .catch(() => this.onLoad());
+  }
+
+  componentWillUnmount() {
+    this.onLoad = () => null;
   }
 
   render() {
     return (
-      <div>
-        <div onClick={ this._clickHandler }>
-          <Button animated={ this.state.buttonAnimated } visible={ this.state.buttonVisible } />
-        </div>
-
-        <Card data={ this.state.data } />
+      <div className={ styles.main }>
+        { this.state.data ? <Card data={ this.state.data } /> : null }
       </div>
     );
   }

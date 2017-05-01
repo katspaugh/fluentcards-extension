@@ -12,11 +12,20 @@ export default class Root extends PureComponent {
     super();
 
     this.state = {
-      count: 0
+      hasItems: 0
     };
+  }
 
-    storage.get('count')
-      .then(count => this.setState({ count: Number(count || 0) }));
+  checkItems() {
+    return storage.get().then((data) => {
+      return Object.keys(data).some(key => !isNaN(Number(key)));
+    });
+  }
+
+  componentDidMount() {
+    this.checkItems().then(hasItems => {
+      this.setState({ hasItems });
+    });
   }
 
   render() {
@@ -35,7 +44,7 @@ export default class Root extends PureComponent {
             Double-click on any word on the page to look it up in the dictionary.
           </p>
 
-          { this.state.count > 0 ? (
+          { this.state.hasItems ? (
             <div className={ styles.controls }>
               <ExportButton />
             </div>

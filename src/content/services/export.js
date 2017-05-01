@@ -12,9 +12,5 @@ export function exportCards() {
   lookupsStore.getAll()
     .then((items) => {
       insertScript('window.fluentcards = ' + JSON.stringify(items));
-
-      setTimeout(() => {
-        lookupsStore.clear();
-      }, 3000);
     });
 }

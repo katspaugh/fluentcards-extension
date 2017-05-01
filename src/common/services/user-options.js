@@ -2,7 +2,6 @@ import storage from './storage.js';
 
 const defaultOptions = {
   targetLanguage: 'en',
-  behavior: 'double-click',
   ttsEnabled: false
 };
 

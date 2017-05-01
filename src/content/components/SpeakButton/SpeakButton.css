@@ -1,0 +1,28 @@
+.button {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  padding: 4px;
+  margin-right: -4px;
+  user-select: none;
+  -webkit-user-select: none;
+  opacity: 0.7;
+}
+
+.button:hover {
+  opacity: 1;
+}
+
+.button polygon {
+  fill: #333;
+  stroke: #333;
+  stroke-width: 5;
+  stroke-linejoin: round;
+}
+
+.button path {
+  fill: none;
+  stroke: #333;
+  stroke-width: 5;
+  stroke-linejoin: round;
+}

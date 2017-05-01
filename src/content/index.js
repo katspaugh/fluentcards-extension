@@ -2,7 +2,6 @@ import debounce from 'lodash/debounce';
 import { isValidSelection } from './services/text-utils.js';
 import { cancelRequests } from './services/ajax.js';
 import { exportCards } from './services/export.js';
-import userOptions from '../common/services/user-options.js';
 import storage from '../common/services/storage.js';
 import Popup from './components/Popup/Popup.jsx';
 
@@ -10,9 +9,13 @@ function initEvents() {
   let isDoubleClick = false;
   let popup = null;
 
-  let options = userOptions.getDefaults();
-  const doubleClick = options.behavior;
-  userOptions.get().then(data => options = data);
+  const reset = () => {
+    if (popup) {
+      popup.remove();
+      popup = null;
+    }
+    cancelRequests();
+  };
 
   document.addEventListener('dblclick', () => {
     isDoubleClick = true;
@@ -22,21 +25,27 @@ function initEvents() {
     if (popup) {
       popup.remove();
       popup = null;
-      cancelRequests();
     }
+    cancelRequests();
 
-    const sel = window.getSelection();
-    if (!isValidSelection(sel.toString())) return;
+    if (!isDoubleClick) return;
 
-    const loadImmediately = isDoubleClick && options.behavior == doubleClick;
-    popup = new Popup(sel, loadImmediately);
+    const selection = window.getSelection();
+    if (!isValidSelection(selection.toString())) return;
+
+    popup = new Popup(selection);
     isDoubleClick = false;
-  }, 10), false);
+  }, 10));
+
+  // To avoid showing the definition when the user double-clicks
+  // to copy the selection
+  document.addEventListener('keydown', () => {
+    if (popup && popup.isDismissable) reset();
+  });
 }
 
 function isDomainEnabled() {
-  const domain = window.location.hostname;
-  return storage.get(domain)
+  return storage.get(window.location.hostname)
     .then(domain => domain == null ? true : domain);
 }
 
