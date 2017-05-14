@@ -1,5 +1,3 @@
-import ajax from '../services/ajax.js';
-
 const apiKeys = [
   'ZGljdC4xLjEuMjAxNTA4MTdUMDgxMTAzWi43YWM4YTUzODk0OTFjYTE1LjkxNjQwNjQwNzEyM2Y2MDlmZDBiZjkzYzEyMjE5MGQ1NmFmNjM1OWM=',
   'ZGljdC4xLjEuMjAxNDA4MTBUMTgwODQyWi40YzA1ZmEyMzkyOWQ4OTFiLjA5Y2QzOTUyZDQ4Njk2YzYzOWIxNjRhNzcxZjY5NDU2N2IwNGJkZWY=',
@@ -43,9 +41,11 @@ export default function yandexDefine(text, lang, targetLang) {
     'text=' + encodeURIComponent(text)
   ].join('&');
 
-  return ajax(url, { json: true }).then((data) => {
-    if (data && data.def && data.def.length) return data;
+  return fetch(url)
+    .then(resp => resp.json())
+    .then(data => {
+      if (data && data.def && data.def.length) return data;
 
-    throw new Error('No data');
-  });
+      throw new Error('No data');
+    });
 }

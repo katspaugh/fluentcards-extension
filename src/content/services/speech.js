@@ -21,3 +21,5 @@ export default function speak(text, lang) {
   speech.rate = 1;
   speechSynthesis.speak(speech);
 }
+
+speak('', 'en');

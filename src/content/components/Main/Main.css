@@ -11,5 +11,5 @@
   top: 0;
   z-index: 1;
   border-top: 4px solid #FBEA31;
-  animation: expand 400ms ease-in infinite alternate;
+  animation: expand 600ms ease-in infinite;
 }

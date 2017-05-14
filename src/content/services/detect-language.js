@@ -1,5 +1,3 @@
-import ajax from '../services/ajax.js';
-
 const apiKeys = [
   'dHJuc2wuMS4xLjIwMTYwNzA5VDExNDkyOFouZDI4OWYyZjA0NDdkNDk3Mi5hOWYzMjVkOWM0ZWMxNWE1NDRmZDVhNzI1MTdjZDdjYTY0M2FhMDNk'
 ];
@@ -21,7 +19,8 @@ export default function detectLanguage(text) {
     'text=' + encodeURIComponent(text)
   ].join('&');
 
-  return ajax(url, { json: true })
+  return fetch(url)
+    .then(resp => resp.json())
     .then(data => data.lang || defaultLanguage)
     .catch(() => defaultLanguage);
 };

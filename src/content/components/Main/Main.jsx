@@ -19,30 +19,32 @@ export default class Main extends PureComponent {
       data: null
     };
 
-    this.onLoad = (result) => {
-      this.props.onLoad();
+    this._onLoad = result => this.onLoad(result);
+  }
 
-      if (!result) return;
+  onLoad(result) {
+    this.props.onLoad();
 
-      // Display the definition
-      this.setState({ data: result });
+    if (!result) return;
 
-      // Save the lookup in the storage
-      lookupsStore.saveOne(this.props.word, this.props.context, result);
+    // Display the definition
+    this.setState({ data: result });
 
-      // Speak the selection
-      if (options.ttsEnabled) speak(this.props.word, result.lang);
-    };
+    // Save the lookup in the storage
+    lookupsStore.saveOne(this.props.word, this.props.context, result);
+
+    // Speak the selection
+    if (options.ttsEnabled) speak(this.props.word, result.lang);
   }
 
   componentDidMount() {
     lookup(this.props.word, this.props.context, options.targetLanguage)
-      .then(data => this.onLoad(data))
-      .catch(() => this.onLoad());
+      .then(data => this._onLoad(data))
+      .catch(() => this._onLoad());
   }
 
   componentWillUnmount() {
-    this.onLoad = () => null;
+    this._onLoad = () => null;
   }
 
   render() {

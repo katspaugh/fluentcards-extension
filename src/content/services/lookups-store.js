@@ -1,5 +1,4 @@
 import storage from '../../common/services/storage';
-import userOptions from '../../common/services/user-options';
 
 
 class LookupsStore {

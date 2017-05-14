@@ -21,7 +21,11 @@ export function isValidSelection (selectedText) {
   return wordsLen >= minWords && wordsLen <= maxWords;
 }
 
-export function getArticle (data, lang) {
+export function splitWords(text) {
+  return text.split(' ');
+}
+
+export function getArticle(data, lang) {
   const articles = {
     de: {
       pl: 'die',

@@ -19,6 +19,12 @@
   },
   "homepage": "https://github.com/katspaugh/fluentcards-extension#readme",
   "devDependencies": {
+    "@types/chrome": "0.0.46",
+    "@types/lodash": "^4.14.63",
+    "@types/node": "^7.0.14",
+    "@types/react": "^15.0.23",
+    "@types/react-dom": "^15.5.0",
+    "@types/whatwg-fetch": "0.0.33",
     "babel-core": "^6.18.2",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^6.2.7",
@@ -32,11 +38,6 @@
     "webpack": "^1.13.3"
   },
   "dependencies": {
-    "@types/chrome": "0.0.46",
-    "@types/lodash": "^4.14.63",
-    "@types/node": "^7.0.14",
-    "@types/react": "^15.0.23",
-    "@types/react-dom": "^15.5.0",
     "classnames": "^2.2.5",
     "lodash": "^4.17.4",
     "react": "^15.5.4",

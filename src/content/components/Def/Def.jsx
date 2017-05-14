@@ -1,14 +1,14 @@
 import React, { PureComponent } from 'react';
-import { getArticle } from '../../services/text-utils.js';
+import { getArticle, splitWords } from '../../services/text-utils.js';
 import SpeakButton from '../SpeakButton/SpeakButton.jsx';
 import styles from './Def.css';
 
 const maxTrs = 3;
+const maxLongTrs = 2;
 
 export default class Def extends PureComponent {
   render() {
     const data = this.props.data;
-    const trs = (data.tr || []).slice(0, maxTrs);
 
     let word = data.text;
     const article = getArticle(data, this.props.lang);
@@ -26,6 +26,13 @@ export default class Def extends PureComponent {
       <div className={ styles.ts }>{ data.ts ? '[' + data.ts + ']' : '' }</div>
     ) : '';
 
+    const trs = (data.tr || []).slice(0, maxTrs).map(item => item.text);
+
+    const list = trs.some(tr => splitWords(tr).length > 5) ?
+      trs.slice(0, maxLongTrs).map((tr, i) => (
+        <div key={ i }>{ tr }</div>
+      )) : trs.join('; ');
+
     return (
       <div className={ styles.def }>
         <div className={ styles.word }>
@@ -41,7 +48,7 @@ export default class Def extends PureComponent {
 
         { transcription }
 
-        <div className={ styles.list }>{ trs.map(item => item.text).join('; ') }</div>
+        <div className={ styles.definitions }>{ list }</div>
       </div>
     );
   }
