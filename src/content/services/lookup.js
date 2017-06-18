@@ -4,21 +4,13 @@ import yandexTranslate from './yandex-translate.js';
 import wordsApiDefine from './words-api.js';
 
 
-const lookupYandexTranslate = (word, lang, targetLang) => {
-  return yandexTranslate(word, lang, targetLang);
-};
-
-const lookupYandexDictionary = (word, lang, targetLang) => {
-  return yandexDefine(word, lang, targetLang);
-};
-
 const load = (word, lang, targetLang) => {
   const request = (lang == 'en' && targetLang == 'en') ?
-    wordsApiDefine(word) :
-    lookupYandexDictionary(word, lang, targetLang);
+    wordsApiDefine(word).catch(() => yandexDefine(word, lang, targetLang)) :
+    yandexDefine(word, lang, targetLang);
 
   return request
-    .catch(() => lookupYandexTranslate(word, lang, targetLang))
+    .catch(() => yandexTranslate(word, lang, targetLang))
     .then(data => ({ lang: lang, data: data }));
 }
 

@@ -21,8 +21,9 @@ function getPosition(sel) {
 
   // Collapse the selection range horizontally to align to the right
   // NB: do this after caching the original bbox
-  range.collapse();
-  const endBbox = range.getBoundingClientRect();
+  const endRange = range.cloneRange();
+  endRange.collapse();
+  const endBbox = endRange.getBoundingClientRect();
 
   return {
     left: Math.round(startBboxLeft + scrollLeft),
