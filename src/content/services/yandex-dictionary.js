@@ -41,7 +41,7 @@ export default function yandexDefine(text, lang, targetLang) {
     'text=' + encodeURIComponent(text)
   ].join('&');
 
-  return fetch(url)
+  return fetch(url, { cache: 'force-cache' })
     .then(resp => resp.json())
     .then(data => {
       if (data && data.def && data.def.length) return data;

@@ -2,7 +2,10 @@ import debounce from 'lodash/debounce';
 import { isValidSelection } from './services/text-utils.js';
 import { exportCards } from './services/export.js';
 import storage from '../common/services/storage.js';
+import userOptions from '../common/services/user-options'
 import Popup from './components/Popup/Popup.jsx';
+import transcribeTexts from './transcriptions.js';
+
 
 function initEvents() {
   let isDoubleClick = false;
@@ -47,7 +50,15 @@ function init() {
   exportCards();
 
   isDomainEnabled().then(isEnabled => {
-    if (isEnabled) initEvents();
+    if (isEnabled) {
+      initEvents();
+
+      userOptions.get().then(data => {
+        if (data.transcriptionEnabled) {
+          transcribeTexts();
+        }
+      });
+    }
   });
 }
 

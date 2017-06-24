@@ -4,7 +4,8 @@ import userOptions from '../common/services/user-options';
 function saveOptions(form) {
   const data = {
     targetLanguage: form.elements.targetLanguage.value,
-    ttsEnabled: form.elements.ttsEnabled.checked
+    ttsEnabled: form.elements.ttsEnabled.checked,
+    transcriptionEnabled: form.elements.transcriptionEnabled.checked
   };
 
   userOptions.set(data).then(() => {
@@ -23,6 +24,7 @@ function restoreOptions(form) {
   userOptions.get().then(options => {
     form.elements.targetLanguage.value = options.targetLanguage;
     form.elements.ttsEnabled.checked = options.ttsEnabled;
+    form.elements.transcriptionEnabled.checked = options.transcriptionEnabled;
   });
 }
 

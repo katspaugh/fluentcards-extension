@@ -1,6 +1,5 @@
 import storage from '../../common/services/storage';
 
-
 class LookupsStore {
   getAll() {
     return storage.get().then((data) => {

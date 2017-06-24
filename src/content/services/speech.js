@@ -2,9 +2,9 @@
  * Speak a piece of text
  *
  * @param {string} text
- * @param {string} lang
+ * @param {?string} lang
  */
-export default function speak(text, lang) {
+export default function speak(text, lang = 'en-US') {
   if (lang === 'en') lang = 'en-US';
 
   speechSynthesis.cancel();
@@ -22,4 +22,5 @@ export default function speak(text, lang) {
   speechSynthesis.speak(speech);
 }
 
-speak('', 'en');
+// Initialize the voices
+speak('');

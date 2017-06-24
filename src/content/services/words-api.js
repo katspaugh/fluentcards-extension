@@ -7,7 +7,7 @@ const endpoint = 'https://dphk13sebjka5.cloudfront.net';
  * @returns {promise}
  */
 export default function getDefinition(word) {
-  return fetch(`${ endpoint }/${ word }`)
+  return fetch(`${ endpoint }/${ word }`, { cache: 'force-cache' })
     .then(resp => resp.json())
     .then(data => ({
       def: data.results

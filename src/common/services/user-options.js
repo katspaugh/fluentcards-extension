@@ -2,7 +2,8 @@ import storage from './storage.js';
 
 const defaultOptions = {
   targetLanguage: 'en',
-  ttsEnabled: false
+  ttsEnabled: false,
+  transcriptionEnabled: false
 };
 
 class UserOptions {
