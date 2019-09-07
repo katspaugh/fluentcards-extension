@@ -15,13 +15,12 @@ const defaultLanguage = 'en';
  * @returns {promise}
  */
 export default function detectLanguage(text) {
-  const url = [
-    endpoint,
+  const params = [
     'key=' + atob(apiKeys[~~(Math.random() * apiKeys.length)]),
     'text=' + encodeURIComponent(text)
   ].join('&');
 
-  return fetchJson(url)
+  return fetchJson('detectApi', params)
     .then(data => data.lang || defaultLanguage)
     .catch(() => defaultLanguage);
 };

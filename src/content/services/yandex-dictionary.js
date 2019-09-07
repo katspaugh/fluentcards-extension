@@ -36,14 +36,13 @@ export default function yandexDefine(text, lang, targetLang) {
     return Promise.reject('Missing language pair');
   }
 
-  const url = [
-    endpoint,
+  const params = [
     'key=' + atob(apiKeys[~~(Math.random() * apiKeys.length)]),
     'lang=' + langPair,
     'text=' + encodeURIComponent(text)
   ].join('&');
 
-  return fetchJson(url)
+  return fetchJson('dictionaryApi', params)
     .then(data => {
       if (data && data.def && data.def.length) return data;
 

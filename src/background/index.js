@@ -1,5 +1,5 @@
 import storage from '../common/services/storage';
-
+import config from '../common/config';
 
 // Export words
 chrome.runtime.onMessage.addListener(msg => {
@@ -8,7 +8,6 @@ chrome.runtime.onMessage.addListener(msg => {
         return chrome.tabs.create({ url: 'https://fluentcards.com/vocab' });
   }
 });
-
 
 // Saved words counter
 function updateCount() {
@@ -37,8 +36,8 @@ chrome.contextMenus.create({
 // Make requests on content script's behalf
 chrome.runtime.onMessage.addListener(
   (request, sender, sendResponse) => {
-    if (request.contentScriptQuery) {
-      fetch(request.contentScriptQuery)
+    if (request.api) {
+      fetch(config.urls[request.api] + request.params)
         .then(response => response.json())
         .then(data => sendResponse(data))
         .catch(error => sendResponse(error));

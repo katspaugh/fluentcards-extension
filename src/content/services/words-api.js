@@ -1,5 +1,4 @@
 import fetchJson from './fetch';
-const endpoint = 'https://dphk13sebjka5.cloudfront.net';
 
 /**
  * Download a definition of a word
@@ -12,7 +11,7 @@ export default function getDefinition(word, lang, targetLang) {
     return Promise.reject(new Error('Unsupported language'));
   }
 
-  return fetchJson(`${ endpoint }/${ word }`)
+  return fetchJson('wordsApi', word)
     .then(data => ({
       def: data.results
         .reduce((acc, next) => {
