@@ -1,0 +1,42 @@
+.card {
+  display: block;
+  box-shadow: 0 0 10px #aaa;
+  background: #fff;
+  padding: 20px;
+  min-width: 350px;
+  max-width: 450px;
+  font-size: 14px;
+  color: #333;
+  font-family: Helvetica, Arial, sans-serif;
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  animation: fade 100ms reverse ease-in;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.yandex {
+  text-align: right;
+  font-size: 10px;
+  color: #888;
+  font-weight: 100;
+  margin-top: 3px;
+  margin-bottom: -5px;
+}
+
+.yandex a {
+  color: #888 !important;
+  font-style: normal !important;
+  font-size: 10px !important;
+  font-weight: 100 !important;
+  line-height: 1.2 !important;
+  text-decoration: underline !important;
+  border: none !important;
+}
+
+.yandex a:hover {
+  color: #777 !important;
+  text-decoration: none !important;
+}

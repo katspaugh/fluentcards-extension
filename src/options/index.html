@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fluentcards Options</title>
+
+    <style>
+      input {
+        vertical-align: middle;
+      }
+
+      label {
+        white-space: nowrap;
+      }
+
+      .radios {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .radios label {
+        display: block;
+        margin-bottom: 1.5em;
+        padding-right: 1em;
+        box-sizing: border-box;
+        width: 33%;
+      }
+
+      #status {
+        padding: 0 1em;
+      }
+    </style>
+  </head>
+
+  <body>
+    <form action="#" id="options-form">
+      <p>
+        <label>
+          Show definitions in:
+        </label>
+
+        <div class="radios">
+          <label>
+            <input name="targetLanguage" type="radio" value="en" />
+            English
+          </label>
+
+          <label>
+            <input name="targetLanguage" type="radio" value="ru" />
+            Russian
+          </label>
+
+          <label>
+            <input name="targetLanguage" type="radio" value="es" />
+            Spanish
+          </label>
+
+          <label>
+            <input name="targetLanguage" type="radio" value="pt" />
+            Portuguese
+          </label>
+
+          <label>
+            <input name="targetLanguage" type="radio" value="fr" />
+            French
+          </label>
+
+          <label>
+            <input name="targetLanguage" type="radio" value="de" />
+            German
+          </label>
+
+          <label>
+            <input name="targetLanguage" type="radio" value="cs" />
+            Czech
+          </label>
+        </div>
+      </p>
+
+      <p>
+        <label>
+          <input type="checkbox" name="ttsEnabled" />
+          Pronounce the word on lookup
+        </label>
+      </p>
+
+      <p>
+        <button type="submit">Save</button>
+        <span id="status"></span>
+      </p>
+    </form>
+
+    <p>
+      Powered by <a href="https://tech.yandex.com/translate/">
+        Yandex.Translate
+      </a> and <a href="https://www.wordsapi.com/">
+        WordsAPI
+      </a>
+    </p>
+
+    <script src="options.js"></script>
+  </body>
+</html>

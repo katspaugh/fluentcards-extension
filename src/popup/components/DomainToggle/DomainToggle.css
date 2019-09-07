@@ -1,0 +1,55 @@
+.toggle {
+  padding-right: 2em;
+}
+
+input[type="checkbox"] {
+  position: absolute;
+  margin: 8px 0 0 16px;
+}
+input[type="checkbox"] + label {
+  position: relative;
+  padding: 5px 0 0 50px;
+}
+input[type="checkbox"] + label:before {
+  content: "";
+  position: absolute;
+  display: block;
+  left: 0;
+  top: 0;
+  width: 40px; /* x*5 */
+  height: 24px; /* x*3 */
+  border-radius: 16px; /* x*2 */
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  transition: all 0.3s;
+}
+input[type="checkbox"] + label:after {
+  content: '';
+  position: absolute;
+  display: block;
+  left: 0px;
+  top: 0px;
+  width: 24px; /* x*3 */
+  height: 24px; /* x*3 */
+  border-radius: 16px; /* x*2 */
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  transition: all 0.3s;
+}
+input[type="checkbox"] + label:hover:after {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+input[type="checkbox"]:checked + label:after {
+  margin-left: 16px;
+}
+input[type="checkbox"]:checked + label:before {
+  background: #333;
+}
+
+input[type="checkbox"] + label>span:before {
+  content: 'Off ';
+}
+
+input[type="checkbox"]:checked + label>span:before {
+  content: 'Enabled ';
+}

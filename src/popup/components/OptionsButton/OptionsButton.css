@@ -1,0 +1,12 @@
+.optionsButton {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.optionsButton:hover path {
+  fill: #000;
+}

@@ -1,0 +1,15 @@
+@keyframes expand { from { width: 0; } to { width: 100%; }  }
+
+.main {
+  position: relative;
+}
+
+.main:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  border-top: 4px solid #FBEA31;
+  animation: expand 600ms ease-in infinite;
+}

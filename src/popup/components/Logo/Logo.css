@@ -1,0 +1,22 @@
+.logo:hover,
+.logo:active,
+.logo:focus,
+.logo:visited,
+.logo {
+  font-size: 20px;
+  color: #333;
+  text-decoration: none;
+  outline: none;
+}
+
+.logo:hover {
+  color: #000;
+}
+
+.logo svg {
+  height: 28px;
+}
+
+.logo:hover g {
+  fill: #000;
+}
