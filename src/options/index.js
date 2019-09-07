@@ -3,8 +3,7 @@ import userOptions from '../common/services/user-options';
 // Save options to the storage
 function saveOptions(form) {
   const data = {
-    targetLanguage: form.elements.targetLanguage.value,
-    ttsEnabled: form.elements.ttsEnabled.checked
+    targetLanguage: form.elements.targetLanguage.value
   };
 
   userOptions.set(data).then(() => {
@@ -22,7 +21,6 @@ function saveOptions(form) {
 function restoreOptions(form) {
   userOptions.get().then(options => {
     form.elements.targetLanguage.value = options.targetLanguage;
-    form.elements.ttsEnabled.checked = options.ttsEnabled;
   });
 }
 

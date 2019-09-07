@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import userOptions from '../../../common/services/user-options'
 import lookup from '../../services/lookup.js';
-import speak from '../../services/speech.js';
 import Card from '../Card/Card.jsx';
 import SaveButton from '../SaveButton/SaveButton.jsx';
 import styles from './Main.css';
@@ -29,9 +28,6 @@ export default class Main extends PureComponent {
 
     // Display the definition
     this.setState({ data: result });
-
-    // Speak the selection
-    if (options.ttsEnabled) speak(this.props.word, result.lang);
   }
 
   componentDidMount() {

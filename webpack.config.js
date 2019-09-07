@@ -31,17 +31,17 @@ module.exports = {
     rules: [
       {
         test: /.jsx?$/,
-        loader: 'babel-loader?cacheDirectory',
+        loader: 'babel-loader',
         include: [
           path.resolve(__dirname, 'src')
         ]
       },
       {
         test: /\.css$/,
-        loader: 'css-loader',
-        options: {
-          modules: true
-        }
+        use: [
+          'style-loader',
+          { loader: 'css-loader', options: { modules: true } }
+        ]
       }
     ]
   }

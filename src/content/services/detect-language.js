@@ -1,5 +1,7 @@
+import fetchJson from './fetch';
+
 const apiKeys = [
-  'dHJuc2wuMS4xLjIwMTYwNzA5VDExNDkyOFouZDI4OWYyZjA0NDdkNDk3Mi5hOWYzMjVkOWM0ZWMxNWE1NDRmZDVhNzI1MTdjZDdjYTY0M2FhMDNk'
+  'dHJuc2wuMS4xLjIwMTkwOTA3VDE1MTAxNFouMTk2NTNhYjU3YzIzMzc2OS43NzA3MTc1YjQwMzRkYTRjZjg1NjM3NDJkYWM2MDcyNjkxNDQ3NDIz'
 ];
 
 const endpoint = 'https://translate.yandex.net/api/v1.5/tr.json/detect?';
@@ -19,8 +21,7 @@ export default function detectLanguage(text) {
     'text=' + encodeURIComponent(text)
   ].join('&');
 
-  return fetch(url)
-    .then(resp => resp.json())
+  return fetchJson(url)
     .then(data => data.lang || defaultLanguage)
     .catch(() => defaultLanguage);
 };

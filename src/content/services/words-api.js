@@ -1,3 +1,4 @@
+import fetchJson from './fetch';
 const endpoint = 'https://dphk13sebjka5.cloudfront.net';
 
 /**
@@ -11,8 +12,7 @@ export default function getDefinition(word, lang, targetLang) {
     return Promise.reject(new Error('Unsupported language'));
   }
 
-  return fetch(`${ endpoint }/${ word }`)
-    .then(resp => resp.json())
+  return fetchJson(`${ endpoint }/${ word }`)
     .then(data => ({
       def: data.results
         .reduce((acc, next) => {

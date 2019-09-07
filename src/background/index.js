@@ -33,3 +33,15 @@ chrome.contextMenus.create({
     chrome.tabs.sendMessage(tab.id, { event: 'saveSelection' });
   }
 });
+
+// Make requests on content script's behalf
+chrome.runtime.onMessage.addListener(
+  (request, sender, sendResponse) => {
+    if (request.contentScriptQuery) {
+      fetch(request.contentScriptQuery)
+        .then(response => response.json())
+        .then(data => sendResponse(data))
+        .catch(error => sendResponse(error));
+      return true;
+    }
+  });
