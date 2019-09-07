@@ -3,20 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/core": "7.5.5",
+    "babel-loader": "8.0.6",
+    "babel-plugin-named-asset-import": "^0.3.3",
+    "babel-preset-react-app": "^9.0.1",
+    "css-loader": "2.1.1",
+    "html-webpack-plugin": "4.0.0-beta.5",
     "lodash": "^4.17.15",
+    "mini-css-extract-plugin": "0.5.0",
+    "optimize-css-assets-webpack-plugin": "5.0.3",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
-    "react-scripts": "3.1.1",
-    "textarea-caret": "^3.1.0"
+    "style-loader": "1.0.0",
+    "textarea-caret": "^3.1.0",
+    "webpack": "4.39.1",
+    "webpack-dev-server": "3.2.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build; ./bin/static-files.sh",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "start": "webpack --progress --colors --watch",
+    "build": "NODE_ENV='production' webpack -p; ./bin/static-files.sh"
   },
   "browserslist": {
     "production": [
@@ -29,5 +34,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.3.8"
   }
 }
