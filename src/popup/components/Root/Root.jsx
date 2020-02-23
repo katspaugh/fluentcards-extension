@@ -17,7 +17,7 @@ export default class Root extends PureComponent {
   }
 
   checkItems() {
-    return storage.get().then((data) => {
+    return storage.getAll().then((data) => {
       return Object.keys(data).some(key => !isNaN(Number(key)));
     });
   }

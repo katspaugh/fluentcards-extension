@@ -1,5 +1,7 @@
 import storage from './storage.js';
 
+const storageKey = 'userOptions';
+
 const defaultOptions = {
   targetLanguage: 'en',
   ttsEnabled: false
@@ -11,12 +13,12 @@ export default class UserOptions {
   }
 
   static get() {
-    return storage.get('userOptions').then(options => {
+    return storage.get(storageKey).then(options => {
       return Object.assign({}, defaultOptions, options ? JSON.parse(options) : {});
     });
   }
 
   static set(options) {
-    return storage.set({ userOptions: JSON.stringify(options) });
+    return storage.set(storageKey, JSON.stringify(options));
   }
 }

@@ -26,13 +26,11 @@ function getDomain() {
 
 function isDomainEnabled(domain) {
   return storage.get(domain)
-    .then(isEnabled => (isEnabled == null ? true : isEnabled));
+    .then(data => (!data ? true : data.isEnabled));
 }
 
 function toggleSite(domain, isEnabled) {
-  const data = {};
-  data[domain] = isEnabled;
-  storage.set(data);
+  storage.set(domain, { isEnabled });
 }
 
 export default class DomainToggle extends PureComponent {
@@ -41,11 +39,13 @@ export default class DomainToggle extends PureComponent {
 
     this.state = {
       domain: '',
-      isEnabled: null
+      isEnabled: true
     };
 
     this.onChange = e => {
-      toggleSite(this.state.domain, e.target.checked);
+      const isEnabled = e.target.checked;
+      toggleSite(this.state.domain, isEnabled);
+      this.setState({ isEnabled });
     };
   }
 
@@ -65,7 +65,7 @@ export default class DomainToggle extends PureComponent {
       <div className={ styles.toggle }>
         <input type="checkbox"
                id="toggle-site"
-               defaultChecked={ this.state.isEnabled }
+               checked={ this.state.isEnabled }
                onChange={ this.onChange } />
         <label htmlFor="toggle-site">
           <span>on</span> <b>{ domain || 'this website' }</b>

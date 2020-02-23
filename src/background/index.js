@@ -11,7 +11,7 @@ chrome.runtime.onMessage.addListener(msg => {
 
 // Saved words counter
 function updateCount() {
-  storage.get().then(data => {
+  storage.getAll().then(data => {
     const count = Object.keys(data)
       .map(Number)
       .filter(key => !isNaN(Number(key)))
