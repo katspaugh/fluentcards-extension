@@ -4,6 +4,7 @@ const storageKey = 'userOptions';
 
 const defaultOptions = {
   targetLanguage: 'en',
+  sourceLanguage: '',
   ttsEnabled: false
 };
 

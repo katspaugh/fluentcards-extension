@@ -3,7 +3,8 @@ import userOptions from '../common/services/user-options';
 // Save options to the storage
 function saveOptions(form) {
   const data = {
-    targetLanguage: form.elements.targetLanguage.value
+    targetLanguage: form.elements.targetLanguage.value,
+    sourceLanguage: form.elements.sourceLanguage.value
   };
 
   userOptions.set(data).then(() => {
@@ -21,6 +22,7 @@ function saveOptions(form) {
 function restoreOptions(form) {
   userOptions.get().then(options => {
     form.elements.targetLanguage.value = options.targetLanguage;
+    form.elements.sourceLanguage.value = options.sourceLanguage;
   });
 }
 

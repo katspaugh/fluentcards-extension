@@ -5,10 +5,8 @@ import Card from '../Card/Card.jsx';
 import SaveButton from '../SaveButton/SaveButton.jsx';
 import styles from './Main.css';
 
-
 const options = userOptions.getDefaults();
 userOptions.get().then(data => Object.assign(options, data));
-
 
 export default class Main extends PureComponent {
   constructor() {
@@ -31,7 +29,7 @@ export default class Main extends PureComponent {
   }
 
   componentDidMount() {
-    lookup(this.props.word, this.props.context, options.targetLanguage)
+    lookup(this.props.word, options.targetLanguage, options.sourceLanguage)
       .then(data => this._onLoad(data))
       .catch(() => this._onLoad());
   }
