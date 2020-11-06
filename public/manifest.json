@@ -1,6 +1,6 @@
 {
   "name": "Fluentcards Dictionary",
-  "version": "0.8.1",
+  "version": "0.8.3",
   "description": "Look up words in a dictionary and save as flashcards.",
   "permissions": [
     "tabs",

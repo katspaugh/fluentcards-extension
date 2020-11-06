@@ -22,3 +22,12 @@
   display: flex;
   justify-content: center;
 }
+
+.link {
+  margin: 15px 0 0;
+  text-align: center;
+}
+
+.link a {
+  color: inherit;
+}
