@@ -1,3 +1,3 @@
 # Fluentcards Chrome Extension
 
-<img width="800" src="https://screenshots.firefoxusercontent.com/images/3e62dd24-29df-4fed-a371-51ff7a39e7b6.png">
+<img width="800" src="https://lh3.googleusercontent.com/agmesGh4eGAjNIjdW42ISL1WIgmkvFWlBh8YAx7Eaj31E2fgB88Kfl7wm0w9ie94Go02xTasd4-rzqkw7Q411qjmHrw=w640-h400-e365-rj-sc0x00ffffff">
