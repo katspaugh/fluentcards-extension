@@ -5,7 +5,8 @@ const storageKey = 'userOptions';
 const defaultOptions = {
   targetLanguage: 'en',
   sourceLanguage: '',
-  ttsEnabled: false
+  ttsEnabled: false,
+  autoDetectLanguage: true
 };
 
 export default class UserOptions {

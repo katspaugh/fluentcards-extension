@@ -29,7 +29,7 @@ export default class Main extends PureComponent {
   }
 
   componentDidMount() {
-    lookup(this.props.word, options.targetLanguage, options.sourceLanguage)
+    lookup(this.props.word, options.targetLanguage, options.sourceLanguage, options.autoDetectLanguage)
       .then(data => this._onLoad(data))
       .catch(() => this._onLoad());
   }

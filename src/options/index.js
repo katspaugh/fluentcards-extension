@@ -4,7 +4,8 @@ import userOptions from '../common/services/user-options';
 function saveOptions(form) {
   const data = {
     targetLanguage: form.elements.targetLanguage.value,
-    sourceLanguage: form.elements.sourceLanguage.value
+    sourceLanguage: form.elements.sourceLanguage.value,
+    autoDetectLanguage: form.elements.autoDetectLanguage.checked
   };
 
   userOptions.set(data).then(() => {
@@ -23,6 +24,7 @@ function restoreOptions(form) {
   userOptions.get().then(options => {
     form.elements.targetLanguage.value = options.targetLanguage;
     form.elements.sourceLanguage.value = options.sourceLanguage;
+    form.elements.autoDetectLanguage.checked = options.autoDetectLanguage;
   });
 }
 
