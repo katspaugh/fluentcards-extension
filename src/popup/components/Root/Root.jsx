@@ -62,10 +62,6 @@ export default class Root extends PureComponent {
               <ExportButton />
             </div>
           ) : null }
-
-          <p className={ styles.link }>
-            <a target="_blank" href="https://www.lingoda.com/en/referral/hwnm43">Get 50$ to learn {targetLang}!</a>
-          </p>
         </div>
       </div>
     );
