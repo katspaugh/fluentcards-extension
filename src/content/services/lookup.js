@@ -8,7 +8,7 @@ function load(word, lang, targetLang) {
     .then(data => ({ lang: lang, data: data }));
 }
 
-export default function lookup(word, targetLang, sourceLang) {
-  const lang = detectLanguage() || sourceLang || 'en';
+export default function lookup(word, targetLang, sourceLang, autoDetectLang) {
+  const lang = autoDetectLang ? detectLanguage() || sourceLang || 'en' : sourceLang || 'en';
   return load(word, lang, targetLang);
 }
